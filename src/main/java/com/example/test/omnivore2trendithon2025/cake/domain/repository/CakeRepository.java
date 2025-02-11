@@ -1,4 +1,8 @@
 package com.example.test.omnivore2trendithon2025.cake.domain.repository;
 
-public interface CakeRepository {
+import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CakeRepository extends JpaRepository<Cake, Long>{
+
 }
