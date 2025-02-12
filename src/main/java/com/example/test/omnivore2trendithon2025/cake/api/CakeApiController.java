@@ -4,6 +4,7 @@ import com.example.test.omnivore2trendithon2025.cake.api.dto.request.SurveyReque
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.CakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.SurveyResponse;
 import com.example.test.omnivore2trendithon2025.cake.application.CakeService;
+import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,24 +19,27 @@ public class CakeApiController {
     private final CakeService cakeService;
 
     @PostMapping
-    public ResponseEntity<SurveyResponse> createCake(@RequestBody
+    public RspTemplate<SurveyResponse> createCake(@RequestBody
                                                @Valid SurveyRequest request) {
         Long cakeId = cakeService.makeCake(request);
 
         SurveyResponse response = SurveyResponse.builder()
-                .message("케이크 생성 완료!")
                 .cakeId(cakeId)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(response);
+        return new RspTemplate<>(
+                HttpStatus.CREATED,
+                "케이크 생성 완료!",
+                response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CakeResponse> findByCakeId(@PathVariable("id") Long cakeId) {
+    public RspTemplate<CakeResponse> findByCakeId(@PathVariable("id") Long cakeId) {
         CakeResponse cakeResponse = cakeService.findByCakeId(cakeId);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(cakeResponse);
+        return new RspTemplate<>(
+                HttpStatus.OK,
+                "케이크 조회 완료!",
+                cakeResponse);
     }
 }
