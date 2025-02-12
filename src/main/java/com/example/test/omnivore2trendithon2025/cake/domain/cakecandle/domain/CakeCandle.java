@@ -1,5 +1,6 @@
-package com.example.test.omnivore2trendithon2025.cake.domain;
+package com.example.test.omnivore2trendithon2025.cake.domain.cakecandle;
 
+import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
 import com.example.test.omnivore2trendithon2025.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

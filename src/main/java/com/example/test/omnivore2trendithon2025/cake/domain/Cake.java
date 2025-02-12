@@ -1,5 +1,6 @@
 package com.example.test.omnivore2trendithon2025.cake.domain;
 
+import com.example.test.omnivore2trendithon2025.cake.domain.cakecandle.domain.CakeCandle;
 import com.example.test.omnivore2trendithon2025.global.entity.BaseEntity;
 import com.example.test.omnivore2trendithon2025.global.entity.Status;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
@@ -18,7 +19,7 @@ public class Cake extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @NotEmpty
+    @NotEmpty(message = "케이크 색은 필수입니다.")
     @Enumerated(EnumType.STRING)
     private CakeColor color;
 
@@ -28,10 +29,8 @@ public class Cake extends BaseEntity {
     @OneToMany(mappedBy = "cake", cascade = CascadeType.ALL)
     private List<CakeCandle> candles = new ArrayList<>();
 
-    private int likes_count;
-
 //    @OneToMany(cascade = CascadeType.ALL)
-//    private List<CakeLike> likes = new ArrayList<>();
+//    private List<Member> likes = new ArrayList<>();
 
     public static Cake makeNewCake(Member member, CakeColor color) {
         Cake cake = new Cake();
