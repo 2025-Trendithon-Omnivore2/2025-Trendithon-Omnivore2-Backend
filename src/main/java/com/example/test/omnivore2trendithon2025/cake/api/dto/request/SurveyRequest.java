@@ -4,6 +4,7 @@ import com.example.test.omnivore2trendithon2025.cake.domain.Answers;
 
 import java.util.List;
 
-public record SurveyRequest(Long userId,
-                            List<Answers> answerList) {
+public record SurveyRequest(
+        Long memberId, String answer1, String answer2, String answer3
+) {
 }

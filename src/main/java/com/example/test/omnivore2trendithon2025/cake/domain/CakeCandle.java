@@ -13,9 +13,6 @@ public class CakeCandle extends BaseEntity {
     private Cake cake;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
