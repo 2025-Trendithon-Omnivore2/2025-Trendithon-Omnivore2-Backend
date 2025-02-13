@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record SurveyResponse(
-        String message, Long cakeId) {
+        Long cakeId) {
 }
