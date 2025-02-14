@@ -42,12 +42,12 @@ public class CakeService {
 
     private CakeColor determineCakeColor(String a1, String a2, String a3) {
         return switch (a1+a2+a3) {
-            case "aaa" -> WHITE;
-            case "aab" -> STRAWBERRY;
-            case "aba" -> YELLOW; // 3~5번은 내용 바뀌면 수정
-            case "baa" -> GREEN;
-            case "abb" -> BLUE;
-            case "bab" -> LEMON;
+            case "aaa" -> STRAWBERRY;
+            case "aab" -> LEMON;
+            case "aba" -> GREEN_TEA;
+            case "baa" -> TIRAMISU;
+            case "abb" -> CREAM;
+            case "bab" -> BLUEBERRY;
             case "bba" -> PISTACHIO;
             case "bbb" -> CHOCOLATE;
             default -> throw new WrongSurveyResultException();
