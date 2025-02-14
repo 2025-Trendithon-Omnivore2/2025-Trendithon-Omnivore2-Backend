@@ -9,7 +9,6 @@ import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.FollowStatus;
 import com.example.test.omnivore2trendithon2025.member.follow.exception.FollowAlreadyAcceptException;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
@@ -107,51 +106,6 @@ public class FollowCustomRepositoryImpl implements FollowCustomRepository {
     }
 
     @Override
-    public Page<MemberInfoForFollowResDto> searchFollowListUsingKeywords(Long memberId, String keyword,
-                                                                         Pageable pageable) {
-        BooleanExpression keywordCondition = buildKeywordCondition(keyword);
-
-        List<MemberInfoForFollowResDto> members = queryFactory
-                .select(Projections.constructor(MemberInfoForFollowResDto.class,
-                        member.id,
-                        member.name,
-                        member.picture,
-                        follow.followStatus.eq(FollowStatus.ACCEPT)
-                ))
-                .from(member)
-                .leftJoin(follow)
-                .on(
-                        (follow.fromMember.id.eq(memberId).and(follow.toMember.id.eq(member.id)))
-                                .or(follow.fromMember.id.eq(member.id).and(follow.toMember.id.eq(memberId)))
-                )
-                .where(
-                        member.id.ne(memberId)
-                                .and(keywordCondition)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        long total = Optional.ofNullable(queryFactory
-                .select(member.count())
-                .from(member)
-                .where(
-                        member.id.ne(memberId)
-                                .and(keywordCondition)
-                )
-                .fetchOne()).orElse(0L);
-
-        return new PageImpl<>(members, pageable, total);
-    }
-
-    private BooleanExpression buildKeywordCondition(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return null;
-        }
-        return member.name.containsIgnoreCase(keyword).or(member.email.containsIgnoreCase(keyword));
-    }
-
-    @Override
     public boolean existsAlreadyFollow(Long followId) {
         return queryFactory
                 .selectOne()
@@ -159,5 +113,35 @@ public class FollowCustomRepositoryImpl implements FollowCustomRepository {
                 .where(follow.id.eq(followId)
                         .and(follow.followStatus.eq(FollowStatus.ACCEPT)))
                 .fetchFirst() != null;
+    }
+
+    @Override
+    public Page<FollowInfoResDto> findFollowerRequestList(Long memberId, Pageable pageable) {
+
+        List<FollowInfoResDto> fetch = queryFactory
+                .select(Projections.constructor(FollowInfoResDto.class,
+                        follow.fromMember.id,
+                        follow.fromMember.name,
+                        follow.fromMember.nickname,
+                        follow.fromMember.picture
+                ))
+                .from(follow)
+                .join(follow.fromMember, member)
+                .where(follow.toMember.id.eq(memberId)
+                        .and(follow.followStatus.eq(FollowStatus.WAIT)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = Optional.ofNullable(
+                queryFactory
+                        .select(follow.count())
+                        .from(follow)
+                        .where(follow.toMember.id.eq(memberId)
+                                .and(follow.followStatus.eq(FollowStatus.WAIT)))
+                        .fetchOne()
+        ).orElse(0L);
+
+        return new PageImpl<>(fetch, pageable, total);
     }
 }

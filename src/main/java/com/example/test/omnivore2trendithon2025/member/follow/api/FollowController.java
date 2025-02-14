@@ -35,8 +35,7 @@ public class FollowController {
     }
 
     @PostMapping("/accept/{followId}")
-    public RspTemplate<Void> accept(@CurrentUserEmail String email,
-                                    @PathVariable Long followId) {
+    public RspTemplate<Void> accept(@PathVariable Long followId) {
         followService.accept(followId);
 
         return new RspTemplate<>(HttpStatus.OK,
@@ -52,6 +51,14 @@ public class FollowController {
                 followService.findFollowList(email, PageRequest.of(page, size)));
     }
 
+    @GetMapping("/requests")
+    public RspTemplate<FollowInfoListDto> findMyFollows(@CurrentUserEmail String email,
+                                                      @RequestParam(name = "page", defaultValue = "0") int page,
+                                                      @RequestParam(name = "size", defaultValue = "10") int size) {
+        return new RspTemplate<>(HttpStatus.OK,
+                "친구 요청 목록 조회",
+                followService.getMemberFollowRequestList(email, PageRequest.of(page, size)));
+    }
 
     @DeleteMapping("/{memberId}")
     public RspTemplate<Void> delete(@CurrentUserEmail String email, @PathVariable Long memberId) {

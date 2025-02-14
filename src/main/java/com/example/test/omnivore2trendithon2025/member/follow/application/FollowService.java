@@ -9,6 +9,7 @@ import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.F
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
+import com.example.test.omnivore2trendithon2025.member.follow.domain.FollowStatus;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.FollowRepository;
 import com.example.test.omnivore2trendithon2025.member.follow.exception.AlreadyFriendsException;
 import com.example.test.omnivore2trendithon2025.member.follow.exception.FollowAlreadyExistsException;
@@ -63,6 +64,17 @@ public class FollowService {
         Long memberId = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new).getId();
 
         Page<FollowInfoResDto> followInfoResDtos = followRepository.findFollowList(memberId, pageable);
+
+        return FollowInfoListDto.of(
+                followInfoResDtos.getContent(),
+                PageInfoResDto.from(followInfoResDtos)
+        );
+    }
+
+    public FollowInfoListDto getMemberFollowRequestList(String email, Pageable pageable) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        Page<FollowInfoResDto> followInfoResDtos = followRepository.findFollowerRequestList(member.getId(), pageable);
 
         return FollowInfoListDto.of(
                 followInfoResDtos.getContent(),
