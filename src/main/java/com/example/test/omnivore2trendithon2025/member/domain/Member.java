@@ -2,13 +2,9 @@ package com.example.test.omnivore2trendithon2025.member.domain;
 
 import com.example.test.omnivore2trendithon2025.global.entity.BaseEntity;
 import com.example.test.omnivore2trendithon2025.global.entity.Status;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +26,8 @@ public class Member extends BaseEntity {
 
     private String name;
 
+    private String nickname;
+
     private String picture;
 
     @Enumerated(value = EnumType.STRING)
@@ -40,7 +38,7 @@ public class Member extends BaseEntity {
     @Builder
     private Member(Status status, Role role,
                    String email, String name,
-                   String picture,
+                   String nickname, String picture,
                    SocialType socialType,
                    boolean firstLogin,
                    String introduction) {
@@ -48,6 +46,7 @@ public class Member extends BaseEntity {
         this.role = role;
         this.email = email;
         this.name = name;
+        this.nickname = nickname;
         this.picture = picture;
         this.socialType = socialType;
         this.firstLogin = firstLogin;
