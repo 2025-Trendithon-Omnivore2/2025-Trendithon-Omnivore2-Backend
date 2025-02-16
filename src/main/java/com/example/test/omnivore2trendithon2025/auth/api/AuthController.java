@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthDocs {
 
     private final AuthServiceFactory authServiceFactory;
     private final AuthMemberService memberService;
