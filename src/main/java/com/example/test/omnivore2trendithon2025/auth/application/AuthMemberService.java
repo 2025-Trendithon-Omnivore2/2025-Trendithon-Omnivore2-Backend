@@ -44,12 +44,14 @@ public class AuthMemberService {
 
     private Member createMember(UserInfo userInfo, SocialType provider) {
         String userPicture = getUserPicture(userInfo.picture());
+        String name = unionName(userInfo.name(), userInfo.nickname());
 
         return memberRepository.save(
                 Member.builder()
                         .status(Status.ACTIVE)
                         .email(userInfo.email())
-                        .name(userInfo.nickname())
+                        .name(name)
+                        .nickname(name)
                         .picture(userPicture)
                         .socialType(provider)
                         .role(Role.ROLE_USER)
@@ -57,6 +59,10 @@ public class AuthMemberService {
                         .introduction("")
                         .build()
         );
+    }
+
+    private String unionName(String name, String nickname) {
+        return nickname != null ? nickname : name;
     }
 
     private String getUserPicture(String picture) {
