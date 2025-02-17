@@ -23,21 +23,27 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    private final String DIR_PATH = "/images";
+    private final String DIR_PATH = "images";
 
-    public String uploadImg(MultipartFile img, Long memberId) throws IOException {
+    public String uploadImg(MultipartFile img, String email) throws IOException {
 
-        String fileKey = DIR_PATH + "/" + memberId.toString() + "/" + img.getOriginalFilename();
+        String fileKey = getFileKey(img, email);
 
         InputStream inputStream = img.getInputStream();
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(img.getSize());
         metadata.setContentType(img.getContentType());
 
-        PutObjectRequest objectRequest = new PutObjectRequest(bucket, fileKey,inputStream, metadata);
+        PutObjectRequest objectRequest = new PutObjectRequest(bucket, fileKey, inputStream, metadata);
 
         s3Client.putObject(objectRequest);
 
         return s3Client.getUrl(bucket, fileKey).toString();
+    }
+
+    private String getFileKey(MultipartFile img, String email) {
+        String folderName = email.substring(0, email.indexOf("."));
+
+        return DIR_PATH + "/" + folderName + "/" + img.getOriginalFilename();
     }
 }
