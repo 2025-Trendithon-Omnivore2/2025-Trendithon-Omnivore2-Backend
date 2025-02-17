@@ -19,7 +19,6 @@ public class Cake extends BaseEntity {
     @JoinColumn(name = "email")
     private Member member;
 
-    @NotEmpty(message = "케이크 색은 필수입니다.")
     @Enumerated(EnumType.STRING)
     private CakeColor color;
 
@@ -29,6 +28,8 @@ public class Cake extends BaseEntity {
     @OneToMany(mappedBy = "cake", cascade = CascadeType.ALL)
     private List<CakeCandle> candles = new ArrayList<>();
 
+    private Integer likeCount;
+
 //    @OneToMany(cascade = CascadeType.ALL)
 //    private List<Member> likes = new ArrayList<>();
 
@@ -37,6 +38,15 @@ public class Cake extends BaseEntity {
         cake.member = member;
         cake.color = color;
         cake.status = Status.ACTIVE;
+        cake.likeCount = 0;
         return cake;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
     }
 }

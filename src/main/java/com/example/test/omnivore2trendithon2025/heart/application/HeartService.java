@@ -1,0 +1,28 @@
+package com.example.test.omnivore2trendithon2025.heart.application;
+
+import com.example.test.omnivore2trendithon2025.cake.domain.repository.CakeRepository;
+import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
+import com.example.test.omnivore2trendithon2025.member.domain.Member;
+import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
+import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class HeartService {
+
+    private final HeartRepository heartRepository;
+    private final MemberRepository memberRepository;
+    private final CakeRepository cakeRepository;
+
+    @Transactional
+    public void createOrDeleteHeart(String email, Long cakeId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        heartRepository.createOrDeleteHeart(member, cakeId);
+    }
+}

@@ -19,13 +19,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Heart extends BaseEntity {
 
-    private Long HeartCount;
-
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member Member;
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "cake_id")
-    private Cake Cake;
+    private Cake cake;
 }
