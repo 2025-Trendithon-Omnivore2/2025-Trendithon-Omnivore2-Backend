@@ -72,7 +72,7 @@ public class KakaoAuthService implements AuthService {
                 throw new RuntimeException("ID 토큰을 파싱하는데 실패했습니다.", e);
             }
         }
-        throw new RuntimeException("구글 엑세스 토큰을 가져오는데 실패했습니다.");
+        throw new RuntimeException("카카오 엑세스 토큰을 가져오는데 실패했습니다.");
     }
 
     @Override
