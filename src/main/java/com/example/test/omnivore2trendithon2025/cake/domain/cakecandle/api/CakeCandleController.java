@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/candles")
+@RequestMapping("/api/cakes/candles")
 public class CakeCandleController implements CakeCandleDocs{
     private final CakeCandleService cakeCandleService;
 
