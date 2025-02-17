@@ -3,10 +3,13 @@ package com.example.test.omnivore2trendithon2025.cupcake.domain;
 import com.example.test.omnivore2trendithon2025.global.entity.BaseEntity;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CupCake extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,5 +33,16 @@ public class CupCake extends BaseEntity {
 
     public void decreaseLikeCount() {
         this.likeCount--;
+    }
+
+    public static CupCake createCupCake(Member member, Emotion emotion, String content, AccessRange accessRange) {
+        CupCake cupCake = new CupCake();
+        cupCake.member = member;
+        cupCake.emotion = emotion;
+        cupCake.content = content;
+        cupCake.accessRange = accessRange;
+        cupCake.likeCount = 0;
+
+        return cupCake;
     }
 }
