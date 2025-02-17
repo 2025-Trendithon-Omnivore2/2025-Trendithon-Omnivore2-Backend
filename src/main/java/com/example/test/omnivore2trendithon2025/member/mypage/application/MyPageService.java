@@ -5,6 +5,7 @@ import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberR
 import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundException;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MyFollowsResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.FollowRepository;
+import com.example.test.omnivore2trendithon2025.member.mypage.api.request.MyPageUpdateReqDto;
 import com.example.test.omnivore2trendithon2025.member.mypage.api.response.MyPageInfoResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,17 @@ public class MyPageService {
         MyFollowsResDto followCountDto = followRepository.findMyFollowsCount(member.getId());
 
         return MyPageInfoResDto.From(member,followCountDto.myFollowsCount());
+    }
+
+    @Transactional
+    public MyPageInfoResDto update(String email, MyPageUpdateReqDto myPageUpdateReqDto) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        MyFollowsResDto followCountDto = followRepository.findMyFollowsCount(member.getId());
+
+        member.update(myPageUpdateReqDto.nickname());
+
+        return MyPageInfoResDto.From(member, followCountDto.myFollowsCount());
     }
 }
