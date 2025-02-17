@@ -4,6 +4,7 @@ import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoListDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MemberInfoForFollowResDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MyFollowsResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,6 @@ public interface FollowCustomRepository {
     Page<FollowInfoResDto> findFollowerRequestList(Long memberId, Pageable pageable);
 
     boolean existsAlreadyFollow(Long followId);
+
+    MyFollowsResDto findMyFollowsCount(Long memberId);
 }

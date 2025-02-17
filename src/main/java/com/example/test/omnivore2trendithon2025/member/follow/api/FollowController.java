@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/member/follow")
+@RequestMapping("api/members/follows")
 public class FollowController implements FollowDocs {
 
     private final FollowService followService;
