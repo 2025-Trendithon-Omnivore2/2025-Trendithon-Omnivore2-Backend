@@ -74,6 +74,7 @@ public class CakeService {
                 .candles(cake.getCandles()
                         .stream()
                         .map(candle -> CakeCandleResponse.builder()
+                                .candleId(candle.getId())
                                 .imgUrl(candle.getImgUrl())
                                 .content(candle.getContent())
                                 .build())

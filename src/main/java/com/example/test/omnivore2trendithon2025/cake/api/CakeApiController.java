@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cakes")
-public class CakeApiController {
+public class CakeApiController implements CakeDocs{
 
     private final CakeService cakeService;
 

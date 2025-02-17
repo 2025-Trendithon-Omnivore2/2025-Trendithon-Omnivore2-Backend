@@ -18,7 +18,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/candles")
-public class CakeCandleController {
+public class CakeCandleController implements CakeCandleDocs{
     private final CakeCandleService cakeCandleService;
 
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE,
