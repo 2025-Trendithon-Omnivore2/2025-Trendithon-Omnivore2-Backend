@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/heart")
-public class HeartController {
+public class HeartController implements HeartDocs {
 
     private final HeartService heartService;
 

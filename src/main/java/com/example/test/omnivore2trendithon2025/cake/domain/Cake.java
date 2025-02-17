@@ -16,7 +16,7 @@ import java.util.List;
 public class Cake extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "email")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Enumerated(EnumType.STRING)
