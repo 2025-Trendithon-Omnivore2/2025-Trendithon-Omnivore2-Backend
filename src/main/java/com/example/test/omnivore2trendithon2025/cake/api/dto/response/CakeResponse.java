@@ -7,6 +7,6 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record CakeResponse( //우선 좋아요 로직은 고려 x
+public record CakeResponse(
         CakeColor color, List<CakeCandleResponse> candles) {
 }

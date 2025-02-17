@@ -16,7 +16,7 @@ import java.util.List;
 public class Cake extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "email")
     private Member member;
 
     @NotEmpty(message = "케이크 색은 필수입니다.")

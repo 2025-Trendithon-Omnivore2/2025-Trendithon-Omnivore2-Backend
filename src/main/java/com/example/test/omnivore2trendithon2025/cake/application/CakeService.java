@@ -28,8 +28,8 @@ public class CakeService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long makeCake(SurveyRequest dto) {
-        Member member = memberRepository.findById(dto.memberId())
+    public Long makeCake(String email, SurveyRequest dto) {
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
 
         CakeColor color = determineCakeColor(dto.answer1(), dto.answer2(), dto.answer3());
@@ -38,6 +38,20 @@ public class CakeService {
 
         return cakeRepository.save(cake)
                 .getId();
+    }
+
+    public CakeResponse findByCakeId(Long id) {
+        Cake cake = cakeRepository.findById(id)
+                .orElseThrow(CakeNotFoundException::new);
+
+        return getCakeResponse(cake);
+    }
+
+    public CakeResponse findByMemberEmail(String email) {
+        Cake cake = cakeRepository.findByMemberEmail(email)
+                .orElseThrow(CakeNotFoundException::new);
+
+        return getCakeResponse(cake);
     }
 
     private CakeColor determineCakeColor(String a1, String a2, String a3) {
@@ -52,13 +66,6 @@ public class CakeService {
             case "bbb" -> CHOCOLATE;
             default -> throw new WrongSurveyResultException();
         };
-    }
-
-    public CakeResponse findByCakeId(Long id) {
-        Cake cake = cakeRepository.findById(id)
-                .orElseThrow(CakeNotFoundException::new);
-
-        return getCakeResponse(cake);
     }
 
     private CakeResponse getCakeResponse(Cake cake) {

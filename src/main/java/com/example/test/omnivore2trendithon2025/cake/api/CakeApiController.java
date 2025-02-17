@@ -4,6 +4,7 @@ import com.example.test.omnivore2trendithon2025.cake.api.dto.request.SurveyReque
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.CakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.SurveyResponse;
 import com.example.test.omnivore2trendithon2025.cake.application.CakeService;
+import com.example.test.omnivore2trendithon2025.global.annotation.CurrentUserEmail;
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,11 @@ public class CakeApiController {
     private final CakeService cakeService;
 
     @PostMapping
-    public RspTemplate<SurveyResponse> createCake(@RequestBody
-                                               @Valid SurveyRequest request) {
-        Long cakeId = cakeService.makeCake(request);
+    public RspTemplate<SurveyResponse> createCake(
+            @CurrentUserEmail String email,
+            @RequestBody @Valid SurveyRequest request) {
+
+        Long cakeId = cakeService.makeCake(email, request);
 
         SurveyResponse response = SurveyResponse.builder()
                 .cakeId(cakeId)
@@ -40,5 +43,16 @@ public class CakeApiController {
                 HttpStatus.OK,
                 "케이크 조회 완료!",
                 cakeResponse);
+    }
+
+    @GetMapping("/email")
+    public RspTemplate<CakeResponse> findByMemberEmail(@CurrentUserEmail String email) {
+        CakeResponse cakeResponse = cakeService.findByMemberEmail(email);
+
+        return new RspTemplate<>(
+                HttpStatus.OK,
+                "케이크 조회 완료!",
+                cakeResponse
+        );
     }
 }

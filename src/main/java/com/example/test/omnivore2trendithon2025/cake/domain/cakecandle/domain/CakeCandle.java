@@ -30,4 +30,10 @@ public class CakeCandle extends BaseEntity {
 
         return cakeCandle;
     }
+
+    public void update(String content, String imgUrl) {
+        this.content = content;
+        this.imgUrl = imgUrl;
+    }
+
 }
