@@ -31,4 +31,6 @@ public class MemberController {
                                                 @RequestBody MyPageUpdateReqDto myPageUpdateReqDto) {
         return new RspTemplate<>(HttpStatus.OK, "내 프로필 정보 수정", myPageService.update(email, myPageUpdateReqDto));
     }
+
+    //todo 상대방 컵케이크 정보 조회
 }
