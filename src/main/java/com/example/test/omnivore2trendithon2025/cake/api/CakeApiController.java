@@ -1,15 +1,19 @@
 package com.example.test.omnivore2trendithon2025.cake.api;
 
 import com.example.test.omnivore2trendithon2025.cake.api.dto.request.SurveyRequest;
-import com.example.test.omnivore2trendithon2025.cake.api.dto.response.CakeResponse;
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.MyCakeResponse;
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.OtherCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.SurveyResponse;
 import com.example.test.omnivore2trendithon2025.cake.application.CakeService;
 import com.example.test.omnivore2trendithon2025.global.annotation.CurrentUserEmail;
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,9 +39,11 @@ public class CakeApiController implements CakeDocs{
                 response);
     }
 
-    @GetMapping("/{id}")
-    public RspTemplate<CakeResponse> findByCakeId(@PathVariable("id") Long cakeId) {
-        CakeResponse cakeResponse = cakeService.findByCakeId(cakeId);
+    @GetMapping("/{cakeId}")
+    public RspTemplate<OtherCakeResponse> findByCakeId(
+            @CurrentUserEmail String email,
+            @PathVariable Long cakeId) {
+        OtherCakeResponse cakeResponse = cakeService.findByCakeId(cakeId, email);
 
         return new RspTemplate<>(
                 HttpStatus.OK,
@@ -45,9 +51,9 @@ public class CakeApiController implements CakeDocs{
                 cakeResponse);
     }
 
-    @GetMapping("/email")
-    public RspTemplate<CakeResponse> findByMemberEmail(@CurrentUserEmail String email) {
-        CakeResponse cakeResponse = cakeService.findByMemberEmail(email);
+    @GetMapping
+    public RspTemplate<MyCakeResponse> findByMemberEmail(@CurrentUserEmail String email) {
+        MyCakeResponse cakeResponse = cakeService.findByMemberEmail(email);
 
         return new RspTemplate<>(
                 HttpStatus.OK,
@@ -55,4 +61,15 @@ public class CakeApiController implements CakeDocs{
                 cakeResponse
         );
     }
+
+    /*@GetMapping("/followers")
+    public RspTemplate<List<OtherCakeResponse>> findFollowerCakes(
+            @CurrentUserEmail String email,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
+    ) {
+        return new RspTemplate<>(HttpStatus.OK,
+                "팔로워 케이크 조회 완료!",
+                cakeService.findFollowerCakes(email, PageRequest.of(page, size)));
+    }*/
 }
