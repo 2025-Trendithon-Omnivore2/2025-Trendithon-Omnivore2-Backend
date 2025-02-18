@@ -52,4 +52,8 @@ public class Member extends BaseEntity {
         this.firstLogin = firstLogin;
         this.introduction = introduction;
     }
+
+    public void updatePicture(String picture) {
+        this.picture = picture;
+    }
 }
