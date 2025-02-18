@@ -1,6 +1,7 @@
 package com.example.test.omnivore2trendithon2025.heart.api;
 
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.SurveyResponse;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.global.annotation.CurrentUserEmail;
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import com.example.test.omnivore2trendithon2025.heart.application.HeartService;
@@ -13,17 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/heart")
+@RequestMapping("/api/hearts")
 public class HeartController implements HeartDocs {
 
     private final HeartService heartService;
 
-    @PostMapping("/{cakeId}")
-    public RspTemplate<SurveyResponse> createOrDeleteHeart(
+    @PostMapping("/cakes/{cakeId}")
+    public RspTemplate<SurveyResponse> createOrDeleteCakeHeart(
             @CurrentUserEmail String email,
             @PathVariable Long cakeId) {
 
-        heartService.createOrDeleteHeart(email, cakeId);
+        heartService.createOrDeleteCakeHeart(email, cakeId);
+
+        return new RspTemplate<>(HttpStatus.OK, "좋아요 등록/삭제 성공");
+    }
+
+    @PostMapping("cup-cakes/{cupCakeId}")
+    public RspTemplate<SaveCupCakeResponse> createOrDeleteCupCakeHeart(
+            @CurrentUserEmail String email,
+            @PathVariable Long cupCakeId) {
+
+        heartService.createOrDeleteCupCakeHeart(email, cupCakeId);
 
         return new RspTemplate<>(HttpStatus.OK, "좋아요 등록/삭제 성공");
     }

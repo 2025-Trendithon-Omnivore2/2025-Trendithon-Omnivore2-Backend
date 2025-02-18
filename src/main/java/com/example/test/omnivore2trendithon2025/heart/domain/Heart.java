@@ -1,6 +1,7 @@
 package com.example.test.omnivore2trendithon2025.heart.domain;
 
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
+import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.example.test.omnivore2trendithon2025.global.entity.BaseEntity;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import jakarta.persistence.Entity;
@@ -26,4 +27,8 @@ public class Heart extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "cake_id")
     private Cake cake;
+
+    @ManyToOne
+    @JoinColumn(name = "cup_cake_id")
+    private CupCake cupCake;
 }

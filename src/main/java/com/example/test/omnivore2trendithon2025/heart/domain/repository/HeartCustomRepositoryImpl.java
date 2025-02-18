@@ -6,6 +6,8 @@ import static com.example.test.omnivore2trendithon2025.heart.domain.QHeart.heart
 
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
 import com.example.test.omnivore2trendithon2025.cake.exception.CakeNotFoundException;
+import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
+import com.example.test.omnivore2trendithon2025.cupcake.exception.CupCakeNotFoundException;
 import com.example.test.omnivore2trendithon2025.heart.domain.Heart;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,7 +26,7 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
 
     @Override
     @Transactional
-    public void createOrDeleteHeart(Member member, Long cakeId) {
+    public void createOrDeleteCakeHeart(Member member, Long cakeId) {
         boolean exists = queryFactory
                 .selectOne()
                 .from(heart)
@@ -37,7 +39,7 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
         }
 
         if (!exists) { // 카운트 증가
-            Heart newHeart = new Heart(member, targetCake);
+            Heart newHeart = new Heart(member, targetCake, null);
             entityManager.persist(newHeart);
 
             targetCake.increaseLikeCount();
@@ -48,6 +50,35 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
                     .execute();
 
             targetCake.decreaseLikeCount();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void createOrDeleteCupCakeHeart(Member member, Long cupCakeId) {
+        boolean exists = queryFactory
+                .selectOne()
+                .from(heart)
+                .where(heart.member.eq(member).and(heart.cupCake.id.eq(cupCakeId)))
+                .fetchFirst() != null;
+
+        CupCake targetCupCake = entityManager.find(CupCake.class, cupCakeId);
+        if (targetCupCake == null) {
+            throw new CupCakeNotFoundException();
+        }
+
+        if (!exists) { // 카운트 증가
+            Heart newHeart = new Heart(member, null, targetCupCake);
+            entityManager.persist(newHeart);
+
+            targetCupCake.increaseLikeCount();
+        } else { // 카운트 감소
+            queryFactory
+                    .delete(heart)
+                    .where(heart.member.eq(member).and(heart.cake.id.eq(cupCakeId)))
+                    .execute();
+
+            targetCupCake.decreaseLikeCount();
         }
     }
 }
