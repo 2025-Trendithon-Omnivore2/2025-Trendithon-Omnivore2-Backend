@@ -4,12 +4,16 @@ import com.example.test.omnivore2trendithon2025.global.entity.BaseEntity;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CupCake extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -61,13 +61,13 @@ public class CupCakeService {
         };
 
     }
-    
-    public List<CupCakeResponse> findMyCupCakes(String email, YearMonth yearMonth) {
 
+    public List<CupCakeResponse> findMyCupCakes(String email, YearMonth yearMonth) {
+        return cupCakeRepository.findByMemberAndYearMonth(email, yearMonth.getYear(), yearMonth.getMonthValue());
     }
 
     public List<CupCakeResponse> findByAccessRangeAndEmail(AccessRange accessRange, String email) {
-
+        return List.of();
     }
 
     private CupCakeResponse CupCakeToResponse(CupCake target) {

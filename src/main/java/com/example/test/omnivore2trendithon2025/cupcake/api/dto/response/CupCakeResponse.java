@@ -9,11 +9,13 @@ import java.time.LocalDateTime;
 
 @Builder
 public record CupCakeResponse(
+        Long cupCakeId,
         Emotion emotion,
         String content,
         LocalDateTime date,
         AccessRange accessRange,
         Integer likeCount
+        //boolean like
 ) {
     public static CupCakeResponse of(Emotion emotion, String content, LocalDateTime date, AccessRange accessRange, Integer likeCount) {
         return CupCakeResponse.builder()
