@@ -24,7 +24,7 @@ public interface HeartDocs {
                     @ApiResponse(responseCode = "401", description = "인증 실패"),
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
-    RspTemplate<SurveyResponse> createOrDeleteHeart(
+    RspTemplate<SurveyResponse> createOrDeleteCakeHeart(
             @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
             @Parameter(description = "cake 고유 Id", required = true) Long cakeId);
 }
