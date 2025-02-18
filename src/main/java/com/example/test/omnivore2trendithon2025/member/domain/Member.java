@@ -62,4 +62,8 @@ public class Member extends BaseEntity {
     private boolean isUpdateRequired(String updateNickname) {
         return !this.nickname.equals(updateNickname);
     }
+
+    public void updatePicture(String picture) {
+        this.picture = picture;
+    }
 }

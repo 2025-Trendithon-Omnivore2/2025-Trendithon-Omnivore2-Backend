@@ -1,6 +1,5 @@
 package com.example.test.omnivore2trendithon2025.heart.application;
 
-import com.example.test.omnivore2trendithon2025.cake.domain.repository.CakeRepository;
 import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
@@ -16,13 +15,21 @@ public class HeartService {
 
     private final HeartRepository heartRepository;
     private final MemberRepository memberRepository;
-    private final CakeRepository cakeRepository;
 
     @Transactional
-    public void createOrDeleteHeart(String email, Long cakeId) {
+    public void createOrDeleteCakeHeart(String email, Long cakeId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
 
-        heartRepository.createOrDeleteHeart(member, cakeId);
+        heartRepository.createOrDeleteCakeHeart(member, cakeId);
     }
+
+    @Transactional
+    public void createOrDeleteCupCakeHeart(String email, Long cupCakeId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        heartRepository.createOrDeleteCupCakeHeart(member, cupCakeId);
+    }
+
 }
