@@ -1,20 +1,27 @@
 package com.example.test.omnivore2trendithon2025.cake.application;
 
 import com.example.test.omnivore2trendithon2025.cake.api.dto.request.SurveyRequest;
-import com.example.test.omnivore2trendithon2025.cake.api.dto.response.CakeResponse;
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.MyCakeResponse;
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.OtherCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
 import com.example.test.omnivore2trendithon2025.cake.domain.CakeColor;
-import com.example.test.omnivore2trendithon2025.cake.domain.cakecandle.api.dto.response.CakeCandleResponse;
 import com.example.test.omnivore2trendithon2025.cake.domain.repository.CakeRepository;
 import com.example.test.omnivore2trendithon2025.cake.exception.CakeNotFoundException;
 import com.example.test.omnivore2trendithon2025.cake.exception.WrongSurveyResultException;
+import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
 import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundException;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
+import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.example.test.omnivore2trendithon2025.cake.domain.CakeColor.*;
@@ -26,6 +33,8 @@ public class CakeService {
 
     private final CakeRepository cakeRepository;
     private final MemberRepository memberRepository;
+    private final FollowRepository followRepository;
+    private final HeartRepository heartRepository;
 
     @Transactional
     public Long makeCake(String email, SurveyRequest dto) {
@@ -40,18 +49,70 @@ public class CakeService {
                 .getId();
     }
 
-    public CakeResponse findByCakeId(Long id) {
-        Cake cake = cakeRepository.findById(id)
+    public OtherCakeResponse findByCakeId(Long cakeId, String email) {
+        Cake cake = cakeRepository.findById(cakeId)
                 .orElseThrow(CakeNotFoundException::new);
 
-        return getCakeResponse(cake);
+        boolean like = heartRepository.existsByMemberAndCakeId(
+                memberRepository.findByEmail(email)
+                        .orElseThrow(MemberNotFoundException::new), cakeId);
+
+        return OtherCakeResponse.of(cake.getId(),
+                cake.getMember().getNickname(),
+                cake.getColor(),
+                cake.getCandles(),
+                cake.getLikeCount(),
+                like);
     }
 
-    public CakeResponse findByMemberEmail(String email) {
+    public MyCakeResponse findByMemberEmail(String email) {
         Cake cake = cakeRepository.findByMemberEmail(email)
                 .orElseThrow(CakeNotFoundException::new);
 
-        return getCakeResponse(cake);
+        return MyCakeResponse.of(cake.getId(),
+                cake.getColor(),
+                cake.getCandles(),
+                cake.getLikeCount());
+    }
+
+    public MyCakeResponse findByMemberId(Long memberId){
+        Cake cake = cakeRepository.findByMemberId(memberId)
+                .orElseThrow(CakeNotFoundException::new);
+
+        return MyCakeResponse.of(cake.getId(),
+                cake.getColor(),
+                cake.getCandles(),
+                cake.getLikeCount());
+    }
+
+    public List<OtherCakeResponse> findFollowerCakes(String email, Pageable pageable) {
+        Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(MemberNotFoundException::new);
+
+        Page<FollowInfoResDto> follows = followRepository.findFollowList(member.getId(), pageable);
+
+        return followCakeResponseList(follows, member);
+    }
+
+    private List<OtherCakeResponse> followCakeResponseList(Page<FollowInfoResDto> follows, Member member) {
+        return follows.getContent().stream()
+                .map(followInfo -> {
+                    Cake cake = cakeRepository.findByMemberId(followInfo.memberId())
+                            .orElseThrow(CakeNotFoundException::new);
+
+                    boolean isLiked = heartRepository.existsByMemberAndCakeId(member, cake.getId());
+
+                    return OtherCakeResponse.of(
+                            cake.getId(),
+                            followInfo.nickname(),
+                            cake.getColor(),
+                            cake.getCandles(),
+                            cake.getLikeCount(),
+                            isLiked
+                    );
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private CakeColor determineCakeColor(String a1, String a2, String a3) {
@@ -66,19 +127,5 @@ public class CakeService {
             case "bbb" -> CHOCOLATE;
             default -> throw new WrongSurveyResultException();
         };
-    }
-
-    private CakeResponse getCakeResponse(Cake cake) {
-        return CakeResponse.builder()
-                .color(cake.getColor())
-                .candles(cake.getCandles()
-                        .stream()
-                        .map(candle -> CakeCandleResponse.builder()
-                                .candleId(candle.getId())
-                                .imgUrl(candle.getImgUrl())
-                                .content(candle.getContent())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
     }
 }

@@ -8,6 +8,7 @@ import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.repository.CupCakeRepository;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.CupCakeNotFoundException;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.LowCupCakeAccessRoleException;
+import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
 import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundException;
@@ -27,6 +28,7 @@ public class CupCakeService {
     private final CupCakeRepository cupCakeRepository;
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
+    private final HeartRepository heartRepository;
 
     @Transactional
     public SaveCupCakeResponse saveCupCake(String email, SaveCupCakeRequest dto) {
@@ -47,14 +49,19 @@ public class CupCakeService {
                 .orElseThrow(CupCakeNotFoundException::new);
 
         // 내 컵케이크: 즉시 조회
-        if(isMine(email, target.getMember().getEmail())) return CupCakeToResponse(target);
+        if(isMine(email, target.getMember().getEmail()))
+            return getCupCakeResponse(target,false);
+
+        boolean like = heartRepository.existsByMemberAndCupCakeId(
+                memberRepository.findByEmail(email)
+                        .orElseThrow(MemberNotFoundException::new), cupCakeId);
 
         // 내 컵케이크 x: 조건 확인 후 처리
         return switch (target.getAccessRange()) {
-            case PUBLIC -> CupCakeToResponse(target);
+            case PUBLIC -> getCupCakeResponse(target, like);
             case FRIEND -> {
                 if (existsFollow(email, target.getMember().getEmail()))
-                    yield CupCakeToResponse(target);
+                    yield getCupCakeResponse(target, like);
                 throw new LowCupCakeAccessRoleException();
             }
             default -> throw new LowCupCakeAccessRoleException();
@@ -62,20 +69,19 @@ public class CupCakeService {
 
     }
 
+    private CupCakeResponse getCupCakeResponse(CupCake target, boolean like) {
+        return CupCakeResponse.of(target.getId(),
+                target.getEmotion(), target.getContent(),
+                target.getMember().getNickname(), target.getCreatedAt(),
+                target.getAccessRange(), target.getLikeCount(), like);
+    }
+
     public List<CupCakeResponse> findMyCupCakes(String email, YearMonth yearMonth) {
         return cupCakeRepository.findByMemberAndYearMonth(email, yearMonth.getYear(), yearMonth.getMonthValue());
     }
 
-    public List<CupCakeResponse> findByAccessRangeAndEmail(AccessRange accessRange, String email) {
-        return List.of();
-    }
-
-    private CupCakeResponse CupCakeToResponse(CupCake target) {
-        return CupCakeResponse.of(target.getEmotion(),
-                    target.getContent(),
-                    target.getCreatedAt(),
-                    target.getAccessRange(),
-                    target.getLikeCount());
+    public List<CupCakeResponse> findMyCupCakesByFilter(String email, YearMonth yearMonth, AccessRange accessRange) {
+        return cupCakeRepository.findByMemberAndYearMonthAndAccessRange(email, yearMonth.getYear(), yearMonth.getMonthValue(), accessRange);
     }
 
     private boolean isMine(String email, String targetEmail) {

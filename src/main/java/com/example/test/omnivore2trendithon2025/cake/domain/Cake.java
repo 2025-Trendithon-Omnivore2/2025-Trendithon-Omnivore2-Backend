@@ -6,13 +6,16 @@ import com.example.test.omnivore2trendithon2025.global.entity.Status;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cake extends BaseEntity {
 
     @OneToOne
@@ -29,9 +32,6 @@ public class Cake extends BaseEntity {
     private List<CakeCandle> candles = new ArrayList<>();
 
     private Integer likeCount;
-
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private List<Member> likes = new ArrayList<>();
 
     public static Cake makeNewCake(Member member, CakeColor color) {
         Cake cake = new Cake();

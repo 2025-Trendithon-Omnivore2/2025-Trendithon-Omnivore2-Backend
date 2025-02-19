@@ -6,4 +6,8 @@ public interface HeartCustomRepository {
     void createOrDeleteCakeHeart(Member member, Long cakeId);
 
     void createOrDeleteCupCakeHeart(Member member, Long cupCakeId);
+
+    boolean existsByMemberAndCakeId(Member member, Long cakeId);
+
+    boolean existsByMemberAndCupCakeId(Member member, Long cupCakeId);
 }

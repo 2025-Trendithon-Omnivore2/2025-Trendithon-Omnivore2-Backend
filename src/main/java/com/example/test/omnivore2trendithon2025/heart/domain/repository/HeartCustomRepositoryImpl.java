@@ -81,4 +81,22 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
             targetCupCake.decreaseLikeCount();
         }
     }
+
+    @Override
+    public boolean existsByMemberAndCakeId(Member member, Long cakeId) {
+        return queryFactory
+                .selectOne()
+                .from(heart)
+                .where(heart.member.eq(member).and(heart.cake.id.eq(cakeId)))
+                .fetchFirst() != null;
+    }
+
+    @Override
+    public boolean existsByMemberAndCupCakeId(Member member, Long cupCakeId) {
+        return queryFactory
+                .selectOne()
+                .from(heart)
+                .where(heart.member.eq(member).and(heart.cake.id.eq(cupCakeId)))
+                .fetchFirst() != null;
+    }
 }

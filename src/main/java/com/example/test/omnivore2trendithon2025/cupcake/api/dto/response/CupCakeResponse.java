@@ -12,18 +12,22 @@ public record CupCakeResponse(
         Long cupCakeId,
         Emotion emotion,
         String content,
+        String nickname,
         LocalDateTime date,
         AccessRange accessRange,
-        Integer likeCount
-        //boolean like
+        Integer likeCount,
+        boolean like
 ) {
-    public static CupCakeResponse of(Emotion emotion, String content, LocalDateTime date, AccessRange accessRange, Integer likeCount) {
+    public static CupCakeResponse of(Long cupCakeId, Emotion emotion, String content, String nickname, LocalDateTime date, AccessRange accessRange, Integer likeCount, boolean like) {
         return CupCakeResponse.builder()
+                .cupCakeId(cupCakeId)
                 .emotion(emotion)
                 .content(content)
+                .nickname(nickname)
                 .date(date)
                 .accessRange(accessRange)
                 .likeCount(likeCount)
+                .like(like)
                 .build();
     }
 }
