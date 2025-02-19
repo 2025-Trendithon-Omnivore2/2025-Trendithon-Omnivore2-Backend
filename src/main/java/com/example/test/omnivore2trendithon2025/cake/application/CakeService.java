@@ -73,6 +73,16 @@ public class CakeService {
                 cake.getCandles(),
                 cake.getLikeCount());
     }
+
+    public MyCakeResponse findByMemberId(Long memberId){
+        Cake cake = cakeRepository.findByMemberId(memberId)
+                .orElseThrow(CakeNotFoundException::new);
+
+        return MyCakeResponse.of(cake.getId(),
+                cake.getColor(),
+                cake.getCandles(),
+                cake.getLikeCount());
+    }
 /*
     public List<OtherCakeResponse> findFollowerCakes(String email, Pageable pageable) {
         Long memberId = memberRepository.findByEmail(email)
