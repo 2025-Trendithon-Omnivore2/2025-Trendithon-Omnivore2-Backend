@@ -16,12 +16,13 @@ import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.F
 import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.example.test.omnivore2trendithon2025.cake.domain.CakeColor.*;
 
@@ -83,14 +84,36 @@ public class CakeService {
                 cake.getCandles(),
                 cake.getLikeCount());
     }
-/*
-    public List<OtherCakeResponse> findFollowerCakes(String email, Pageable pageable) {
-        Long memberId = memberRepository.findByEmail(email)
-                        .orElseThrow(MemberNotFoundException::new).getId();
 
-        Page<FollowInfoResDto> follows = followRepository.findFollowList(memberId, pageable);
-        return List.of();
-    }*/
+    public List<OtherCakeResponse> findFollowerCakes(String email, Pageable pageable) {
+        Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(MemberNotFoundException::new);
+
+        Page<FollowInfoResDto> follows = followRepository.findFollowList(member.getId(), pageable);
+
+        return followCakeResponseList(follows, member);
+    }
+
+    private List<OtherCakeResponse> followCakeResponseList(Page<FollowInfoResDto> follows, Member member) {
+        return follows.getContent().stream()
+                .map(followInfo -> {
+                    Cake cake = cakeRepository.findByMemberId(followInfo.memberId())
+                            .orElseThrow(CakeNotFoundException::new);
+
+                    boolean isLiked = heartRepository.existsByMemberAndCakeId(member, cake.getId());
+
+                    return OtherCakeResponse.of(
+                            cake.getId(),
+                            followInfo.nickname(),
+                            cake.getColor(),
+                            cake.getCandles(),
+                            cake.getLikeCount(),
+                            isLiked
+                    );
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
     private CakeColor determineCakeColor(String a1, String a2, String a3) {
         return switch (a1+a2+a3) {

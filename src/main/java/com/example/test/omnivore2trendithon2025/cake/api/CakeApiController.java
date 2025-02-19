@@ -72,7 +72,7 @@ public class CakeApiController implements CakeDocs{
         );
     }
 
-    /*@GetMapping("/followers")
+    @GetMapping("/followers")
     public RspTemplate<List<OtherCakeResponse>> findFollowerCakes(
             @CurrentUserEmail String email,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -81,5 +81,5 @@ public class CakeApiController implements CakeDocs{
         return new RspTemplate<>(HttpStatus.OK,
                 "팔로워 케이크 조회 완료!",
                 cakeService.findFollowerCakes(email, PageRequest.of(page, size)));
-    }*/
+    }
 }
