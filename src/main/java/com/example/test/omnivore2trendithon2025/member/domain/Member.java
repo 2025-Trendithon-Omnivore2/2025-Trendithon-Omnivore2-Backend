@@ -53,6 +53,16 @@ public class Member extends BaseEntity {
         this.introduction = introduction;
     }
 
+    public void update(String nickname) {
+        if (isUpdateRequired(nickname)) {
+            this.nickname = nickname;
+        }
+    }
+
+    private boolean isUpdateRequired(String updateNickname) {
+        return !this.nickname.equals(updateNickname);
+    }
+
     public void updatePicture(String picture) {
         this.picture = picture;
     }
