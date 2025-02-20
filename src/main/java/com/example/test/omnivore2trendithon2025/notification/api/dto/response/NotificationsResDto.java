@@ -11,17 +11,18 @@ public record NotificationsResDto(
     public static NotificationsResDto from(List<Notification> notifications) {
         return NotificationsResDto.builder()
                 .notifications(notifications.stream()
-                        .map((notification) -> NotificationResDto.from(notification.getMessage()))
+                        .map((notification) -> NotificationResDto.of(notification.getMessage(), notification.getIsRead()))
                         .toList())
                 .build();
     }
 
     @Builder
     private record NotificationResDto(
-            String message
+            String message,
+            Boolean isRead
     ) {
-        public static NotificationResDto from(String message) {
-            return new NotificationResDto(message);
+        public static NotificationResDto of(String message, Boolean isRead) {
+            return new NotificationResDto(message, isRead);
         }
     }
     
