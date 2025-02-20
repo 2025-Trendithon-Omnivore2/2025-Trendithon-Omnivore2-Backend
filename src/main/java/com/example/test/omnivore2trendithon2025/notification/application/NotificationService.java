@@ -1,0 +1,56 @@
+package com.example.test.omnivore2trendithon2025.notification.application;
+
+import com.example.test.omnivore2trendithon2025.member.domain.Member;
+import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
+import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundException;
+import com.example.test.omnivore2trendithon2025.notification.api.dto.response.NotificationsResDto;
+import com.example.test.omnivore2trendithon2025.notification.domain.Notification;
+import com.example.test.omnivore2trendithon2025.notification.domain.repository.NotificationRepository;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class NotificationService {
+
+    private final SseEmitterManager sseEmitterManager;
+    private final MemberRepository memberRepository;
+    private final NotificationRepository notificationRepository;
+
+    public SseEmitter connect(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        return sseEmitterManager.connect(member.getId());
+    }
+
+    @Transactional
+    public void send(String email, Long targetMemberId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+        Member targetMember = memberRepository.findById(targetMemberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        String message = "name: " + member.getName() + "님이 알림을 보냈습니다.";
+
+        notificationRepository.save(Notification.builder()
+                .receiver(targetMember)
+                .message(message)
+                .build());
+
+        sseEmitterManager.send(targetMember, message);
+    }
+
+    public NotificationsResDto getNotifications(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        List<Notification> allByReceiver = notificationRepository.findAllByReceiver(member);
+
+        return NotificationsResDto.from(allByReceiver);
+    }
+}
