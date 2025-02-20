@@ -37,6 +37,7 @@ public class Notification {
     private Notification(Member receiver, String message) {
         this.receiver = receiver;
         this.message = message;
+        this.isRead = false;
     }
 
 }
