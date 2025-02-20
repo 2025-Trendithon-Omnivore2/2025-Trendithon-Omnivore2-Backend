@@ -30,6 +30,9 @@ public class Notification {
 
     private String message;
 
+    @Column(nullable = false)
+    private Boolean isRead;
+
     @Builder
     private Notification(Member receiver, String message) {
         this.receiver = receiver;
