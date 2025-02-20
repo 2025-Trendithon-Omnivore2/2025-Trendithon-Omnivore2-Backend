@@ -5,7 +5,7 @@ import com.example.test.omnivore2trendithon2025.notification.domain.Notification
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Long>, NotificationCustomRepository {
 
     List<Notification> findAllByReceiver(Member receiver);
 }

@@ -39,5 +39,4 @@ public class Notification {
         this.message = message;
         this.isRead = false;
     }
-
 }

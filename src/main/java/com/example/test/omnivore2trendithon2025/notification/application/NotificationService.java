@@ -53,4 +53,12 @@ public class NotificationService {
 
         return NotificationsResDto.from(allByReceiver);
     }
+
+    @Transactional
+    public void markAllNotificationsAsRead(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        notificationRepository.markAllAsRead(member.getId());
+    }
 }
