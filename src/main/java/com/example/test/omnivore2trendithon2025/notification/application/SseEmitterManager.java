@@ -1,7 +1,6 @@
 package com.example.test.omnivore2trendithon2025.notification.application;
 
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
-import com.example.test.omnivore2trendithon2025.notification.exception.EmitterCallbackException;
 import com.example.test.omnivore2trendithon2025.notification.exception.SendFailedException;
 import java.io.IOException;
 import java.util.Map;
@@ -44,11 +43,6 @@ public class SseEmitterManager {
             log.info("SSE 연결 시간 초과: " + emitterId);
             emitter.complete();
             removeEmitter(emitterId);
-        });
-
-        emitter.onError((e) -> {
-            removeEmitter(emitterId);
-            throw new EmitterCallbackException("Emitter 에러 발생", e);
         });
     }
 
