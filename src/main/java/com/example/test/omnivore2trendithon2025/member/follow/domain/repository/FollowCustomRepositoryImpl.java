@@ -4,7 +4,7 @@ import static com.example.test.omnivore2trendithon2025.member.domain.QMember.mem
 import static com.example.test.omnivore2trendithon2025.member.follow.domain.QFollow.follow;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
-import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MemberInfoForFollowResDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MyFollowsResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.FollowStatus;
 import com.example.test.omnivore2trendithon2025.member.follow.exception.FollowAlreadyAcceptException;
@@ -143,5 +143,20 @@ public class FollowCustomRepositoryImpl implements FollowCustomRepository {
         ).orElse(0L);
 
         return new PageImpl<>(fetch, pageable, total);
+    }
+
+    @Override
+    public MyFollowsResDto findMyFollowsCount(Long memberId) {
+        int followCount = (int) queryFactory
+                .select(follow)
+                .from(follow)
+                .where(
+                        (follow.fromMember.id.eq(memberId)
+                                .or(follow.toMember.id.eq(memberId)))
+                                .and(follow.followStatus.eq(FollowStatus.ACCEPT))
+                )
+                .fetchCount();
+
+        return MyFollowsResDto.from(followCount);
     }
 }
