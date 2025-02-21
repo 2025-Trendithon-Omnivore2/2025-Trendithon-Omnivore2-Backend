@@ -29,7 +29,7 @@ public interface CakeDocs {
     })
     RspTemplate<SurveyResponse> createCake(
             @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
-            @Parameter(description = "심리검사 응답 결과(a 혹은 b)", required = true) SurveyRequest request);
+            @Parameter(description = "케이크 색깔(예시: STRAWBERRY)", required = true) SurveyRequest request);
 
 
     @Operation(summary = "케이크 id 기반 조회", description = "케이크 정보를 고유 id로 조회합니다.",
@@ -78,7 +78,7 @@ public interface CakeDocs {
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
     RspTemplate<List<OtherCakeResponse>> findFollowerCakes(
-            @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)") String email,
+            @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
             @Parameter(description = "페이지 번호", required = true) int page,
             @Parameter(description = "요청할 개수", required = true) int size);
 }
