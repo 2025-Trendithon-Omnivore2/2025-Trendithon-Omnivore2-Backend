@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class NotificationController {
+public class NotificationController implements NotificationDocs {
 
     private final NotificationService notificationService;
 
