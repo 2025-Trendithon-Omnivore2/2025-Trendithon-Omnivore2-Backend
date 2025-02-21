@@ -45,6 +45,16 @@ public class NotificationService {
         sseEmitterManager.send(targetMember, message);
     }
 
+    @Transactional
+    public void send(Member targetMember, String message) {
+        notificationRepository.save(Notification.builder()
+                .receiver(targetMember)
+                .message(message)
+                .build());
+
+        sseEmitterManager.send(targetMember, message);
+    }
+
     public NotificationsResDto getNotifications(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
