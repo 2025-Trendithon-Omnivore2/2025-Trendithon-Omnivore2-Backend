@@ -1,6 +1,8 @@
 package com.example.test.omnivore2trendithon2025.cake.api.dto.request;
 
+import com.example.test.omnivore2trendithon2025.cake.domain.CakeColor;
+
 public record SurveyRequest(
-        String answer1, String answer2, String answer3
+        CakeColor color
 ) {
 }

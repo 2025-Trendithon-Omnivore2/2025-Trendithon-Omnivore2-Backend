@@ -41,7 +41,7 @@ public class CakeService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
 
-        CakeColor color = determineCakeColor(dto.answer1(), dto.answer2(), dto.answer3());
+        CakeColor color = dto.color();
 
         Cake cake = Cake.makeNewCake(member, color);
 
@@ -115,17 +115,4 @@ public class CakeService {
                 .collect(Collectors.toList());
     }
 
-    private CakeColor determineCakeColor(String a1, String a2, String a3) {
-        return switch (a1+a2+a3) {
-            case "aaa" -> STRAWBERRY;
-            case "aab" -> LEMON;
-            case "aba" -> GREEN_TEA;
-            case "baa" -> TIRAMISU;
-            case "abb" -> CREAM;
-            case "bab" -> BLUEBERRY;
-            case "bba" -> PISTACHIO;
-            case "bbb" -> CHOCOLATE;
-            default -> throw new WrongSurveyResultException();
-        };
-    }
 }
