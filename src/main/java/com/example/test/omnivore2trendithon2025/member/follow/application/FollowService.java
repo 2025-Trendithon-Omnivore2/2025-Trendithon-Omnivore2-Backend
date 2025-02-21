@@ -14,6 +14,8 @@ import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.
 import com.example.test.omnivore2trendithon2025.member.follow.exception.AlreadyFriendsException;
 import com.example.test.omnivore2trendithon2025.member.follow.exception.FollowAlreadyExistsException;
 import com.example.test.omnivore2trendithon2025.member.follow.exception.FollowNotFoundException;
+import com.example.test.omnivore2trendithon2025.notification.application.NotificationService;
+import com.example.test.omnivore2trendithon2025.notification.domain.NotificationMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ public class FollowService {
 
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public FollowResDto save(String email, FollowReqDto followReqDto) {
@@ -37,6 +40,10 @@ public class FollowService {
 
         Follow follow = followReqDto.toEntity(fromMember, toMember);
         followRepository.save(follow);
+
+        String followRequestMessage = String.format(NotificationMessage.FOLLOW_REQUEST.getMessage(), fromMember.getNickname(),
+                follow.getId());
+        notificationService.send(toMember, followRequestMessage);
 
         return FollowResDto.from(toMember);
     }
@@ -52,6 +59,11 @@ public class FollowService {
         validateFollowStatusIsAccept(followId);
 
         followRepository.acceptFollowingRequest(followId);
+
+        Follow follow = followRepository.findById(followId)
+                .orElseThrow(FollowNotFoundException::new);
+        String followRequestMessage = String.format(NotificationMessage.FOLLOW_ACCEPT.getMessage(), follow.getToMember().getNickname());
+        notificationService.send(follow.getFromMember(), followRequestMessage);
     }
 
     private void validateFollowStatusIsAccept(Long followId) {
