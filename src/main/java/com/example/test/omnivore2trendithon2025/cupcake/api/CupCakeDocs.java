@@ -3,9 +3,11 @@ package com.example.test.omnivore2trendithon2025.cupcake.api;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.CupCakeYearMonthRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.CupCakeYearMonthWithAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
+import com.example.test.omnivore2trendithon2025.global.annotation.CurrentUserEmail;
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -72,7 +75,7 @@ public interface CupCakeDocs {
     @Operation(summary = "내 팔로워 컵케이크 목록 조회", description = "내 팔로워의 컵케이크를 최신순으로 조회합니다.",
         responses = {
                 @ApiResponse(responseCode = "200", description = "컵케이크 조회 성공",
-                        content = @Content(schema = @Schema(implementation = CupCakeResponse.class))),
+                        content = @Content(schema = @Schema(implementation = FollowCupCakeResponse.class))),
                 @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                 @ApiResponse(responseCode = "401", description = "인증 실패"),
                 @ApiResponse(responseCode = "500", description = "서버 오류")
@@ -81,5 +84,18 @@ public interface CupCakeDocs {
             @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
             @Parameter(description = "페이지 번호", required = true) int page,
             @Parameter(description = "요청할 개수", required = true) int size);
+
+    @Operation(summary = "내 컵케이크 접근 범위 수정", description = "내 컵케이크의 접근 범위를 수정합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "접근 범위 수정 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "403", description = "수정할 수 있는 권한 없음"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
+    RspTemplate<Void> updateCupCakeAccess(
+            @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
+            @Parameter(description = "컵케이크 id와 수정하려는 접근 권한") updateAccessRequest request
+    );
 }
 
