@@ -2,6 +2,7 @@ package com.example.test.omnivore2trendithon2025.cupcake.application;
 
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
@@ -12,8 +13,11 @@ import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRep
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
 import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundException;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,19 +73,32 @@ public class CupCakeService {
 
     }
 
-    private CupCakeResponse getCupCakeResponse(CupCake target, boolean like) {
-        return CupCakeResponse.of(target.getId(),
-                target.getEmotion(), target.getContent(),
-                target.getMember().getNickname(), target.getCreatedAt(),
-                target.getAccessRange(), target.getLikeCount(), like);
-    }
-
     public List<CupCakeResponse> findMyCupCakes(String email, YearMonth yearMonth) {
         return cupCakeRepository.findByMemberAndYearMonth(email, yearMonth.getYear(), yearMonth.getMonthValue());
     }
 
     public List<CupCakeResponse> findMyCupCakesByFilter(String email, YearMonth yearMonth, AccessRange accessRange) {
         return cupCakeRepository.findByMemberAndYearMonthAndAccessRange(email, yearMonth.getYear(), yearMonth.getMonthValue(), accessRange);
+    }
+
+    public List<FollowCupCakeResponse> findFollowersCupCake(String email, Pageable page) {
+        Long myId = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new).getId();
+
+        List<Long> followersId = followRepository.findFollowList(myId, page)
+                .getContent()
+                .stream()
+                .map(FollowInfoResDto::memberId)
+                .toList();
+
+        return cupCakeRepository.findByFollowerIds(myId, followersId);
+    }
+
+    private CupCakeResponse getCupCakeResponse(CupCake target, boolean like) {
+        return CupCakeResponse.of(target.getId(),
+                target.getEmotion(), target.getContent(),
+                target.getMember().getNickname(), target.getCreatedAt(),
+                target.getAccessRange(), target.getLikeCount(), like);
     }
 
     private boolean isMine(String email, String targetEmail) {
