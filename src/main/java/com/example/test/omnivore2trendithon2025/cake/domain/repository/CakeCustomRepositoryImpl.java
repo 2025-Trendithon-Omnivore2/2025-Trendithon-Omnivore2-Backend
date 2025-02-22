@@ -9,6 +9,7 @@ import com.querydsl.core.QueryFactory;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,8 +29,8 @@ import static com.example.test.omnivore2trendithon2025.member.domain.QMember.mem
 @Transactional(readOnly = true)
 public class CakeCustomRepositoryImpl implements CakeCustomRepository {
 
-    private EntityManager em;
-    private final QueryFactory queryFactory;
+    private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Optional<Cake> findByMemberEmail(String email) {
