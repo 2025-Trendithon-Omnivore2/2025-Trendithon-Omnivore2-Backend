@@ -44,6 +44,16 @@ public interface FollowDocs {
     RspTemplate<Void> accept(
             @Parameter(description = "follow 고유 ID", required = true) Long followId);
 
+    @Operation(summary = "친구 추가 거절", description = "친구 추가 요청을 거절합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "친구 거절 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
+    RspTemplate<Void> reject(
+            @Parameter(description = "follow 고유 ID", required = true) Long followId);
+
     @Operation(summary = "내 친구 목록 조회", description = "내 친구 목록을 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "내 친구 목록 조회 성공",

@@ -42,6 +42,14 @@ public class FollowController implements FollowDocs {
                 "친구 추가 수락");
     }
 
+    @DeleteMapping("/reject/{followId}")
+    public RspTemplate<Void> reject(@PathVariable Long followId) {
+        followService.reject(followId);
+
+        return new RspTemplate<>(HttpStatus.OK,
+                "친구 추가 거절");
+    }
+
     @GetMapping
     public RspTemplate<FollowInfoListDto> findFollowList(@CurrentUserEmail String email,
                                                          @RequestParam(name = "page", defaultValue = "0") int page,

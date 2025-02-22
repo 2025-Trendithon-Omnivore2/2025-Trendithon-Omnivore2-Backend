@@ -66,6 +66,12 @@ public class FollowService {
         notificationService.send(follow.getFromMember(), followRequestMessage);
     }
 
+    @Transactional
+    public void reject(Long followId) {
+        followRepository.delete(followRepository.findById(followId)
+                .orElseThrow(FollowNotFoundException::new));
+    }
+
     private void validateFollowStatusIsAccept(Long followId) {
         if (followRepository.existsAlreadyFollow(followId)) {
             throw new AlreadyFriendsException();
