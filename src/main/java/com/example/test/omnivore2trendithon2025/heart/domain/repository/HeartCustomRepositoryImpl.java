@@ -75,7 +75,7 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
         } else { // 카운트 감소
             queryFactory
                     .delete(heart)
-                    .where(heart.member.eq(member).and(heart.cake.id.eq(cupCakeId)))
+                    .where(heart.member.eq(member).and(heart.cupCake.id.eq(cupCakeId)))
                     .execute();
 
             targetCupCake.decreaseLikeCount();
