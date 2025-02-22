@@ -6,9 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface CakeRepository extends JpaRepository<Cake, Long>{
-    @Query("SELECT c FROM Cake c JOIN c.member m WHERE m.email =: email")
-    Optional<Cake> findByMemberEmail(String email);
+public interface CakeRepository extends JpaRepository<Cake, Long>, CakeCustomRepository {
 
-    Optional<Cake> findByMemberId(Long memberId);
 }

@@ -47,4 +47,8 @@ public class CupCake extends BaseEntity {
 
         return cupCake;
     }
+
+    public void updateAccessRange(AccessRange accessRange) {
+        this.accessRange = accessRange;
+    }
 }
