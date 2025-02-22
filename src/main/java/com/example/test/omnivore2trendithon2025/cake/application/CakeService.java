@@ -89,30 +89,13 @@ public class CakeService {
         Member member = memberRepository.findByEmail(email)
                         .orElseThrow(MemberNotFoundException::new);
 
-        Page<FollowInfoResDto> follows = followRepository.findFollowList(member.getId(), pageable);
+        List<Long> followerIds = followRepository.findFollowList(member.getId(), pageable)
+                .getContent()
+                .stream()
+                .map(FollowInfoResDto::memberId)
+                .toList();
 
-        return followCakeResponseList(follows, member);
-    }
-
-    private List<OtherCakeResponse> followCakeResponseList(Page<FollowInfoResDto> follows, Member member) {
-        return follows.getContent().stream()
-                .map(followInfo -> {
-                    Cake cake = cakeRepository.findByMemberId(followInfo.memberId())
-                            .orElseThrow(CakeNotFoundException::new);
-
-                    boolean isLiked = heartRepository.existsByMemberAndCakeId(member, cake.getId());
-
-                    return OtherCakeResponse.of(
-                            cake.getId(),
-                            followInfo.nickname(),
-                            cake.getColor(),
-                            cake.getCandles(),
-                            cake.getLikeCount(),
-                            isLiked
-                    );
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        return cakeRepository.findFollowerCakes(member, followerIds);
     }
 
 }
