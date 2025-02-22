@@ -1,6 +1,7 @@
 package com.example.test.omnivore2trendithon2025.cupcake.application;
 
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
@@ -9,6 +10,7 @@ import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.repository.CupCakeRepository;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.CupCakeNotFoundException;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.LowCupCakeAccessRoleException;
+import com.example.test.omnivore2trendithon2025.cupcake.exception.UnauthorizedCupCakeModificationException;
 import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
@@ -16,13 +18,13 @@ import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundE
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -112,5 +114,19 @@ public class CupCakeService {
                 memberRepository.findByEmail(targetEmail)
                         .orElseThrow(MemberNotFoundException::new)
         );
+    }
+
+    public void updateCupCakeAccess(String email, updateAccessRequest dto) {
+        CupCake cupCake = cupCakeRepository.findById(dto.cupCakeId())
+                .orElseThrow(CupCakeNotFoundException::new);
+
+        if(!Objects.equals(memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new)
+                .getId(), cupCake.getId()))
+            throw new UnauthorizedCupCakeModificationException();
+
+        cupCake.updateAccessRange(dto.range());
+
+        cupCakeRepository.save(cupCake);
     }
 }

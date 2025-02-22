@@ -3,6 +3,7 @@ package com.example.test.omnivore2trendithon2025.cupcake.api;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.CupCakeYearMonthRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.CupCakeYearMonthWithAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
@@ -83,6 +84,18 @@ public class CupCakeController implements CupCakeDocs{
                 HttpStatus.OK,
                 "내 팔로워 컵케이크 조회 완료!",
                 cupCakeService.findFollowersCupCake(email, PageRequest.of(page, size))
+        );
+    }
+
+    @PatchMapping("/{cupCakeId}")
+    public RspTemplate<Void> updateCupCakeAccess(
+            @CurrentUserEmail String email,
+            @RequestBody updateAccessRequest request
+    ){
+        cupCakeService.updateCupCakeAccess(email, request);
+        return new RspTemplate<>(
+                HttpStatus.OK,
+                "컵케이크 접근 범위 수정 완료!"
         );
     }
 }
