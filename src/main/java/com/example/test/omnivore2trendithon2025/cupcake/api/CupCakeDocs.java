@@ -1,7 +1,7 @@
 package com.example.test.omnivore2trendithon2025.cupcake.api;
 
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.UpdateAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.*;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
@@ -82,6 +82,7 @@ public interface CupCakeDocs {
             @Parameter(description = "페이지 번호", required = true) int page,
             @Parameter(description = "요청할 개수", required = true) int size);
 
+    /*
     @Operation(summary = "내 컵케이크 접근 범위 수정", description = "내 컵케이크의 접근 범위를 수정합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "접근 범위 수정 성공"),
@@ -93,6 +94,18 @@ public interface CupCakeDocs {
     RspTemplate<Void> updateCupCakeAccess(
             @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
             @Parameter(description = "컵케이크 id와 수정하려는 접근 권한") updateAccessRequest request
+    );*/
+
+    @Operation(summary = "내 컵케이크 접근 범위 수정", description = "내 컵케이크의 접근 범위를 수정합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "접근 범위 수정 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "401", description = "인증 실패"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
+    RspTemplate<Void> updateCupCakeAccess(
+            @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
+            @Parameter(description = "변경하려는 접근 권한 레벨") UpdateAccessRequest request
     );
 }
 

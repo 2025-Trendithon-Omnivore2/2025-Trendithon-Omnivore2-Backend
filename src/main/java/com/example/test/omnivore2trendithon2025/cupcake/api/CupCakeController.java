@@ -1,7 +1,7 @@
 package com.example.test.omnivore2trendithon2025.cupcake.api;
 
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.UpdateAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.*;
 import com.example.test.omnivore2trendithon2025.cupcake.application.CupCakeService;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
@@ -85,11 +85,24 @@ public class CupCakeController implements CupCakeDocs{
         );
     }
 
+    /*
     @PatchMapping("/{cupCakeId}")
     public RspTemplate<Void> updateCupCakeAccess(
             @CurrentUserEmail String email,
             @RequestBody updateAccessRequest request
     ){
+        cupCakeService.updateCupCakeAccess(email, request);
+        return new RspTemplate<>(
+                HttpStatus.OK,
+                "컵케이크 접근 범위 수정 완료!"
+        );
+    }*/
+
+    @PatchMapping("/update-access")
+    public RspTemplate<Void> updateCupCakeAccess(
+            @CurrentUserEmail String email,
+            @RequestBody UpdateAccessRequest request
+            ){
         cupCakeService.updateCupCakeAccess(email, request);
         return new RspTemplate<>(
                 HttpStatus.OK,

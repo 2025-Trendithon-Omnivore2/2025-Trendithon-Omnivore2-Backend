@@ -1,14 +1,13 @@
 package com.example.test.omnivore2trendithon2025.cupcake.application;
 
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.UpdateAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.*;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.repository.CupCakeRepository;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.CupCakeNotFoundException;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.LowCupCakeAccessRoleException;
-import com.example.test.omnivore2trendithon2025.cupcake.exception.UnauthorizedCupCakeModificationException;
 import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.domain.repository.MemberRepository;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -113,7 +111,8 @@ public class CupCakeService {
                         .orElseThrow(MemberNotFoundException::new)
         );
     }
-
+    /*
+    @Transactional
     public void updateCupCakeAccess(String email, updateAccessRequest dto) {
         CupCake cupCake = cupCakeRepository.findById(dto.cupCakeId())
                 .orElseThrow(CupCakeNotFoundException::new);
@@ -126,5 +125,12 @@ public class CupCakeService {
         cupCake.updateAccessRange(dto.range());
 
         cupCakeRepository.save(cupCake);
+    }
+     */
+    @Transactional
+    public void updateCupCakeAccess(String email, UpdateAccessRequest dto) {
+        List<CupCake> myCupCakes = cupCakeRepository.findByEmail(email);
+
+        myCupCakes.forEach(cupCake -> cupCake.updateAccessRange(dto.range()));
     }
 }

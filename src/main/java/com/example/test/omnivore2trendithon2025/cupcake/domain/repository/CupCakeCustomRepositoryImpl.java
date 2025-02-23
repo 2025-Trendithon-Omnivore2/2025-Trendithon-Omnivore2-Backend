@@ -4,6 +4,7 @@ import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCake
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeYearMonthResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
+import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static com.example.test.omnivore2trendithon2025.cupcake.domain.QCupCake.cupCake;
 import static com.example.test.omnivore2trendithon2025.heart.domain.QHeart.heart;
+import static com.example.test.omnivore2trendithon2025.member.domain.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
@@ -91,6 +93,14 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                 .from(cupCake)
                 .where(cupCake.member.id.in(followerIds))
                 .orderBy(cupCake.createdAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<CupCake> findByEmail(String email) {
+        return queryFactory.selectFrom(cupCake)
+                .join(cupCake.member, member)
+                .where(member.email.eq(email))
                 .fetch();
     }
 }
