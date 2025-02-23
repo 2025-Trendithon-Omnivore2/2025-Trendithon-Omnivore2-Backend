@@ -1,9 +1,9 @@
 package com.example.test.omnivore2trendithon2025.cupcake.domain.repository;
 
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeAccessResponse;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeYearMonthResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -11,7 +11,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +28,12 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
     private JPAQueryFactory queryFactory;
 
     @Override
-    public List<CupCakeResponse> findByMemberAndYearMonth(String email, int year, int month) {
+    public List<CupCakeYearMonthResponse> findByMemberAndYearMonth(String email, int year, int month) {
         return queryFactory
-                .select(Projections.constructor(CupCakeResponse.class,
+                .select(Projections.constructor(CupCakeYearMonthResponse.class,
                         cupCake.id,
                         cupCake.emotion,
-                        cupCake.content,
-                        cupCake.createdAt,
-                        cupCake.accessRange,
-                        cupCake.likeCount))
+                        cupCake.createdAt))
                 .from(cupCake)
                 .where(
                         cupCake.member.email.eq(email),
@@ -48,16 +44,14 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
     }
 
     @Override
-    public List<CupCakeResponse> findByMemberAndYearMonthAndAccessRange(String email, int year, int month, AccessRange accessRange) {
+    public List<CupCakeAccessResponse> findByMemberAndYearMonthAndAccessRange(String email, int year, int month, AccessRange accessRange) {
 
         return queryFactory
-                .select(Projections.constructor(CupCakeResponse.class,
+                .select(Projections.constructor(CupCakeAccessResponse.class,
                         cupCake.id,
                         cupCake.emotion,
-                        cupCake.content,
                         cupCake.createdAt,
-                        cupCake.accessRange,
-                        cupCake.likeCount))
+                        cupCake.accessRange))
                 .from(cupCake)
                 .where(
                         cupCake.member.email.eq(email),
@@ -77,11 +71,11 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
         return queryFactory
                 .select(Projections.constructor(FollowCupCakeResponse.class,
                         cupCake.id,
-                        cupCake.emotion,
+                        cupCake.member.nickname,
                         cupCake.createdAt,
                         cupCake.accessRange,
+                        cupCake.emotion,
                         cupCake.likeCount,
-                        cupCake.member.nickname,
                         ExpressionUtils.as(
                                 JPAExpressions
                                         .selectOne()

@@ -1,12 +1,8 @@
 package com.example.test.omnivore2trendithon2025.cupcake.api;
 
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.CupCakeYearMonthRequest;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.CupCakeYearMonthWithAccessRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.*;
 import com.example.test.omnivore2trendithon2025.cupcake.application.CupCakeService;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.global.annotation.CurrentUserEmail;
@@ -16,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -49,28 +46,29 @@ public class CupCakeController implements CupCakeDocs{
     }
 
     @GetMapping("/date")
-    public RspTemplate<List<CupCakeResponse>> findMyCupCakes(
+    public RspTemplate<List<CupCakeYearMonthResponse>> findMyCupCakes(
             @CurrentUserEmail String email,
-            @RequestBody CupCakeYearMonthRequest request
+            @RequestParam YearMonth yearMonth
             ){
 
         return new RspTemplate<>(
                 HttpStatus.OK,
                 "연도와 월에 맞는 컵케이크들 조회 완료!",
-                cupCakeService.findMyCupCakes(email, request.yearMonth())
+                cupCakeService.findMyCupCakes(email, yearMonth)
         );
     }
 
     @GetMapping("/date/access")
-    public RspTemplate<List<CupCakeResponse>> findMyCupCakesWithAccessRange(
+    public RspTemplate<List<CupCakeAccessResponse>> findMyCupCakesWithAccessRange(
             @CurrentUserEmail String email,
-            @RequestBody CupCakeYearMonthWithAccessRequest request
+            @RequestParam YearMonth yearMonth,
+            @RequestParam AccessRange accessRange
             ){
 
         return new RspTemplate<>(
                 HttpStatus.OK,
                 "접근 범위, 연도와 월에 맞는 컵케이크들 조회 완료!",
-                cupCakeService.findMyCupCakesByFilter(email, request.yearMonth(), request.accessRange())
+                cupCakeService.findMyCupCakesByFilter(email, yearMonth, accessRange)
         );
     }
 
