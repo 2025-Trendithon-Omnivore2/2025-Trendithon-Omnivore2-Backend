@@ -24,8 +24,8 @@ import static com.example.test.omnivore2trendithon2025.heart.domain.QHeart.heart
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
-    private EntityManager em;
-    private JPAQueryFactory queryFactory;
+    private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<CupCakeYearMonthResponse> findByMemberAndYearMonth(String email, int year, int month) {
