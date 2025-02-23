@@ -2,9 +2,7 @@ package com.example.test.omnivore2trendithon2025.cupcake.application;
 
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.SaveCupCakeRequest;
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.request.updateAccessRequest;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCakeResponse;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.SaveCupCakeResponse;
+import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.*;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.repository.CupCakeRepository;
@@ -75,11 +73,11 @@ public class CupCakeService {
 
     }
 
-    public List<CupCakeResponse> findMyCupCakes(String email, YearMonth yearMonth) {
+    public List<CupCakeYearMonthResponse> findMyCupCakes(String email, YearMonth yearMonth) {
         return cupCakeRepository.findByMemberAndYearMonth(email, yearMonth.getYear(), yearMonth.getMonthValue());
     }
 
-    public List<CupCakeResponse> findMyCupCakesByFilter(String email, YearMonth yearMonth, AccessRange accessRange) {
+    public List<CupCakeAccessResponse> findMyCupCakesByFilter(String email, YearMonth yearMonth, AccessRange accessRange) {
         return cupCakeRepository.findByMemberAndYearMonthAndAccessRange(email, yearMonth.getYear(), yearMonth.getMonthValue(), accessRange);
     }
 
