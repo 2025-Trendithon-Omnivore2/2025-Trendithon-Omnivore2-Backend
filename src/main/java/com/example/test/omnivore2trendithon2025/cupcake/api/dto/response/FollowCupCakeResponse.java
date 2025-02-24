@@ -13,6 +13,7 @@ public record FollowCupCakeResponse(
         LocalDateTime date,
         AccessRange accessRange,
         Emotion emotion,
+        String content,
         Integer likeCount,
         boolean like
 ) {
@@ -22,6 +23,7 @@ public record FollowCupCakeResponse(
             LocalDateTime date,
             AccessRange accessRange,
             Emotion emotion,
+            String content,
             Integer likeCount,
             boolean like) {
 
@@ -31,6 +33,7 @@ public record FollowCupCakeResponse(
                 .date(date)
                 .accessRange(accessRange)
                 .emotion(emotion)
+                .content(content)
                 .likeCount(likeCount)
                 .like(like)
                 .build();

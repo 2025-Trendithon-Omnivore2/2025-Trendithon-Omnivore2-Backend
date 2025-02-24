@@ -35,7 +35,20 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                 .select(Projections.constructor(CupCakeYearMonthResponse.class,
                         cupCake.id,
                         cupCake.emotion,
-                        cupCake.createdAt))
+                        cupCake.createdAt,
+                        cupCake.content,
+                        cupCake.likeCount,
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select()
+                                        .from(heart)
+                                        .where(
+                                                heart.member.email.eq(email),
+                                                heart.cupCake.member.email.eq(email)
+                                        )
+                                        .exists(),
+                                "like"
+                        )))
                 .from(cupCake)
                 .where(
                         cupCake.member.email.eq(email),
@@ -77,6 +90,7 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                         cupCake.createdAt,
                         cupCake.accessRange,
                         cupCake.emotion,
+                        cupCake.content,
                         cupCake.likeCount,
                         ExpressionUtils.as(
                                 JPAExpressions
