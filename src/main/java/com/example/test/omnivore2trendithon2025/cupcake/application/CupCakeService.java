@@ -39,7 +39,7 @@ public class CupCakeService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
 
-        if(cupCakeRepository.isExistByLocalDate(LocalDate.now()))
+        if(cupCakeRepository.isExistByLocalDate(member, LocalDate.now()))
             throw new AlreadyExistThisDateException();
 
         CupCake newCupCake = CupCake.createCupCake(member, dto.emotion(), dto.content(), dto.accessRange());

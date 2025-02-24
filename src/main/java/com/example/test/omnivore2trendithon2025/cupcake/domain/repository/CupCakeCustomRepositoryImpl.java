@@ -5,6 +5,7 @@ import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCake
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
+import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -120,10 +121,11 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
     }
 
     @Override
-    public boolean isExistByLocalDate(LocalDate date) {
+    public boolean isExistByLocalDate(Member member, LocalDate date) {
         return queryFactory.
                 selectFrom(cupCake)
-                .where(cupCake.createdAt.year().eq(date.getYear())
+                .where(cupCake.member.eq(member)
+                        .and(cupCake.createdAt.year().eq(date.getYear()))
                         .and(cupCake.createdAt.month().eq(date.getMonthValue()))
                         .and(cupCake.createdAt.dayOfMonth().eq(date.getDayOfMonth())))
                 .fetchFirst() != null;
