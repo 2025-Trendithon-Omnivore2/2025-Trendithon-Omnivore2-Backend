@@ -109,4 +109,15 @@ public class CupCakeController implements CupCakeDocs{
                 "컵케이크 접근 범위 수정 완료!"
         );
     }
+
+    @GetMapping("/my-access")
+    public RspTemplate<AccessRangeResponse> getAccessRange(
+            @CurrentUserEmail String email
+    ){
+        return new RspTemplate<>(
+                HttpStatus.OK,
+                "내 컵케이크 접근 범위 반환 완료",
+                cupCakeService.giveAccessRange(email)
+        );
+    }
 }
