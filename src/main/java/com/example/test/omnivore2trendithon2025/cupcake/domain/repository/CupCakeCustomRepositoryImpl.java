@@ -5,6 +5,7 @@ import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.CupCake
 import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
+import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +37,20 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                 .select(Projections.constructor(CupCakeYearMonthResponse.class,
                         cupCake.id,
                         cupCake.emotion,
-                        cupCake.createdAt))
+                        cupCake.createdAt,
+                        cupCake.content,
+                        cupCake.likeCount,
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select()
+                                        .from(heart)
+                                        .where(
+                                                heart.member.email.eq(email),
+                                                heart.cupCake.member.email.eq(email)
+                                        )
+                                        .exists(),
+                                "like"
+                        )))
                 .from(cupCake)
                 .where(
                         cupCake.member.email.eq(email),
@@ -77,6 +92,7 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                         cupCake.createdAt,
                         cupCake.accessRange,
                         cupCake.emotion,
+                        cupCake.content,
                         cupCake.likeCount,
                         ExpressionUtils.as(
                                 JPAExpressions
@@ -102,5 +118,16 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                 .join(cupCake.member, member)
                 .where(member.email.eq(email))
                 .fetch();
+    }
+
+    @Override
+    public boolean isExistByLocalDate(Member member, LocalDate date) {
+        return queryFactory.
+                selectFrom(cupCake)
+                .where(cupCake.member.eq(member)
+                        .and(cupCake.createdAt.year().eq(date.getYear()))
+                        .and(cupCake.createdAt.month().eq(date.getMonthValue()))
+                        .and(cupCake.createdAt.dayOfMonth().eq(date.getDayOfMonth())))
+                .fetchFirst() != null;
     }
 }

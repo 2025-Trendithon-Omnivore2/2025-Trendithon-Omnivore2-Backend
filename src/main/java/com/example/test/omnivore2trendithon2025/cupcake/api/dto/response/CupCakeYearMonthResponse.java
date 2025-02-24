@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 public record CupCakeYearMonthResponse(
         Long cupCakeId,
         Emotion emotion,
-        LocalDateTime date
+        LocalDateTime date,
+        String content,
+        Integer likeCount,
+        boolean like
 ) {
 }

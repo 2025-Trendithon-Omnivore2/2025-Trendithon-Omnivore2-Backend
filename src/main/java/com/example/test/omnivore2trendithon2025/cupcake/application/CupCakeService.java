@@ -6,6 +6,7 @@ import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.*;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.AccessRange;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.CupCake;
 import com.example.test.omnivore2trendithon2025.cupcake.domain.repository.CupCakeRepository;
+import com.example.test.omnivore2trendithon2025.cupcake.exception.AlreadyExistThisDateException;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.CupCakeNotFoundException;
 import com.example.test.omnivore2trendithon2025.cupcake.exception.LowCupCakeAccessRoleException;
 import com.example.test.omnivore2trendithon2025.heart.domain.repository.HeartRepository;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -36,6 +38,9 @@ public class CupCakeService {
     public SaveCupCakeResponse saveCupCake(String email, SaveCupCakeRequest dto) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
+
+        if(cupCakeRepository.isExistByLocalDate(member, LocalDate.now()))
+            throw new AlreadyExistThisDateException();
 
         CupCake newCupCake = CupCake.createCupCake(member, dto.emotion(), dto.content(), dto.accessRange());
 
