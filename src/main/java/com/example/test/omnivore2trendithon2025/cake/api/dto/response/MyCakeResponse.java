@@ -5,7 +5,10 @@ import com.example.test.omnivore2trendithon2025.cake.domain.cakecandle.api.dto.r
 import com.example.test.omnivore2trendithon2025.cake.domain.cakecandle.domain.CakeCandle;
 import lombok.Builder;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
@@ -20,8 +23,10 @@ public record MyCakeResponse(
         return MyCakeResponse.builder()
                 .cakeId(cakeId)
                 .color(color)
-                .candles(candles
+                .candles(Optional.ofNullable(candles)
+                        .orElse(Collections.emptyList())
                         .stream()
+                        .filter(Objects::nonNull)
                         .map(candle -> CakeCandleResponse.builder()
                                 .candleId(candle.getId())
                                 .imgUrl(candle.getImgUrl())
