@@ -72,7 +72,7 @@ public class CakeApiController implements CakeDocs{
         );
     }
 
-    @GetMapping("/followers")
+    @GetMapping("/follow")
     public RspTemplate<List<OtherCakeResponse>> findFollowerCakes(
             @CurrentUserEmail String email,
             @RequestParam(name = "page", defaultValue = "0") int page,

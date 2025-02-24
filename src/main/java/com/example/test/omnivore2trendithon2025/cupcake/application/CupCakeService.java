@@ -103,6 +103,14 @@ public class CupCakeService {
         myCupCakes.forEach(cupCake -> cupCake.updateAccessRange(dto.range()));
     }
 
+    public AccessRangeResponse giveAccessRange(String email){
+        List<CupCake> myCupCakes = cupCakeRepository.findByEmail(email);
+
+        return AccessRangeResponse.builder()
+                .access(myCupCakes.get(0).getAccessRange())
+                .build();
+    }
+
     private CupCakeResponse getCupCakeResponse(CupCake target, boolean like) {
         return CupCakeResponse.of(target.getId(),
                 target.getEmotion(), target.getContent(),
