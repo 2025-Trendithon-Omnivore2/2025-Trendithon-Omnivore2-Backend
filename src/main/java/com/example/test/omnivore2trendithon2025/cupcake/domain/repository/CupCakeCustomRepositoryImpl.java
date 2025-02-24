@@ -107,7 +107,9 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                         )
                 ))
                 .from(cupCake)
-                .where(cupCake.member.id.in(followerIds))
+                .where(cupCake.member.id.in(followerIds)
+                        .and(cupCake.accessRange.eq(AccessRange.PUBLIC))
+                        .and(cupCake.accessRange.eq(AccessRange.FRIEND)))
                 .orderBy(cupCake.createdAt.desc())
                 .fetch();
     }

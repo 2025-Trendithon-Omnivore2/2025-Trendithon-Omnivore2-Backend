@@ -73,7 +73,6 @@ public class CupCakeService {
             }
             default -> throw new LowCupCakeAccessRoleException();
         };
-
     }
 
     public List<CupCakeYearMonthResponse> findMyCupCakes(String email, YearMonth yearMonth) {
@@ -95,6 +94,13 @@ public class CupCakeService {
                 .toList();
 
         return cupCakeRepository.findByFollowerIds(myId, followersId);
+    }
+
+    @Transactional
+    public void updateCupCakeAccess(String email, UpdateAccessRequest dto) {
+        List<CupCake> myCupCakes = cupCakeRepository.findByEmail(email);
+
+        myCupCakes.forEach(cupCake -> cupCake.updateAccessRange(dto.range()));
     }
 
     private CupCakeResponse getCupCakeResponse(CupCake target, boolean like) {
@@ -132,10 +138,4 @@ public class CupCakeService {
         cupCakeRepository.save(cupCake);
     }
      */
-    @Transactional
-    public void updateCupCakeAccess(String email, UpdateAccessRequest dto) {
-        List<CupCake> myCupCakes = cupCakeRepository.findByEmail(email);
-
-        myCupCakes.forEach(cupCake -> cupCake.updateAccessRange(dto.range()));
-    }
 }
