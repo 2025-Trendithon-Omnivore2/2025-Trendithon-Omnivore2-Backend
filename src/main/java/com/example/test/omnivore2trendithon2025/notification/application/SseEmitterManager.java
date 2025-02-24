@@ -1,9 +1,11 @@
 package com.example.test.omnivore2trendithon2025.notification.application;
 
+import com.example.test.omnivore2trendithon2025.cake.domain.repository.CakeRepository;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.notification.exception.SendFailedException;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ public class SseEmitterManager {
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60 * 24;
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final CakeRepository cakeRepository;
 
     public SseEmitter connect(final Long memberId) {
         String emitterId = String.valueOf(memberId);
@@ -28,8 +31,10 @@ public class SseEmitterManager {
 
         // SSE 연결 시 초기 메시지 전송
         registerEmitterCallbacks(emitter, emitterId);
-        sendToClient(emitter, emitterId, "SSE 연결 완료: memberId " + memberId);
 
+        Optional<Long> cakeId = cakeRepository.findIdByMemberId(memberId);
+
+        sendToClient(emitter, emitterId, "SSE 연결 완료: memberId " + memberId + " cakeId " + cakeId.orElse(null));
         return emitter;
     }
 
