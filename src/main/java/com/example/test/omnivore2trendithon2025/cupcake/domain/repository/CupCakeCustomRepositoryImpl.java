@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -116,5 +117,15 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                 .join(cupCake.member, member)
                 .where(member.email.eq(email))
                 .fetch();
+    }
+
+    @Override
+    public boolean isExistByLocalDate(LocalDate date) {
+        return queryFactory.
+                selectFrom(cupCake)
+                .where(cupCake.createdAt.year().eq(date.getYear())
+                        .and(cupCake.createdAt.month().eq(date.getMonthValue()))
+                        .and(cupCake.createdAt.dayOfMonth().eq(date.getDayOfMonth())))
+                .fetchFirst() != null;
     }
 }
