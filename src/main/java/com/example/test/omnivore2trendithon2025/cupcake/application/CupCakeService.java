@@ -106,6 +106,11 @@ public class CupCakeService {
     public AccessRangeResponse giveAccessRange(String email){
         List<CupCake> myCupCakes = cupCakeRepository.findByEmail(email);
 
+        if(myCupCakes.isEmpty())
+            return AccessRangeResponse.builder()
+                    .access(AccessRange.PUBLIC)
+                    .build();
+
         return AccessRangeResponse.builder()
                 .access(myCupCakes.get(0).getAccessRange())
                 .build();
