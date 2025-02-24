@@ -26,7 +26,7 @@ public interface CakeCandleDocs {
     })
     RspTemplate<SaveCandleResponse> createCandle(
             @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
-            @Parameter(description = "작성한 내용", required = true) CakeCandleRequest request,
+            @Parameter(description = "작성한 내용 및 인덱스", required = true) CakeCandleRequest request,
             @Parameter(description = "이미지 파일", required = true) MultipartFile image);
 
     @Operation(summary = "케이크 이미지 id 기반 조회", description = "케이크 이미지를 고유 id를 통해 조회합니다.",

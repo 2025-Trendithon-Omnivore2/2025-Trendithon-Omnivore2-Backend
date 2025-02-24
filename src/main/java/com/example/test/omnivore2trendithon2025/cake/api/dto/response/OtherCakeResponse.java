@@ -31,6 +31,7 @@ public record OtherCakeResponse(
                                 .candleId(candle.getId())
                                 .imgUrl(candle.getImgUrl())
                                 .content(candle.getContent())
+                                .candleIndex(candle.getCandleIndex())
                                 .build())
                         .collect(Collectors.toList()))
                 .likeCount(likeCount)

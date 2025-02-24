@@ -22,11 +22,14 @@ public class CakeCandle extends BaseEntity {
     @Column(nullable = false)
     private String imgUrl;
 
-    public static CakeCandle createCandle(Cake cake, String content, String imgUrl) {
+    private Integer candleIndex;
+
+    public static CakeCandle createCandle(Cake cake, String content, String imgUrl, Integer candleIndex) {
         CakeCandle cakeCandle = new CakeCandle();
         cakeCandle.cake = cake;
         cakeCandle.content = content;
         cakeCandle.imgUrl = imgUrl;
+        cakeCandle.candleIndex = candleIndex;
 
         return cakeCandle;
     }
