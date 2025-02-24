@@ -35,7 +35,7 @@ public class CakeCandleService {
         Cake cake = cakeRepository.findByMemberEmail(email)
                 .orElseThrow(CakeNotFoundException::new);
 
-        CakeCandle candle = CakeCandle.createCandle(cake, dto.content(), imgUrl);
+        CakeCandle candle = CakeCandle.createCandle(cake, dto.content(), imgUrl, dto.candleIndex());
 
         cakeCandleRepository.save(candle);
 
@@ -59,6 +59,7 @@ public class CakeCandleService {
                         .candleId(candle.getId())
                         .imgUrl(candle.getImgUrl())
                         .content(candle.getContent())
+                        .candleIndex(candle.getCandleIndex())
                         .build()
                 ).toList();
     }

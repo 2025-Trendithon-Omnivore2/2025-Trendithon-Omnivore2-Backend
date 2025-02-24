@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record CakeCandleResponse(
-        Long candleId, String imgUrl, String content) {
+        Long candleId, String imgUrl, String content, Integer candleIndex) {
 }

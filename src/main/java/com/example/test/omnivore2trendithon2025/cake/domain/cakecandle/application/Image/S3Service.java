@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,15 +29,13 @@ public class S3Service {
     public String uploadImg(MultipartFile img, String email) throws IOException {
 
         String fileKey = getFileKey(img, email);
-
-        InputStream inputStream = img.getInputStream();
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(img.getSize());
-        metadata.setContentType(img.getContentType());
-
-        PutObjectRequest objectRequest = new PutObjectRequest(bucket, fileKey, inputStream, metadata);
-
-        s3Client.putObject(objectRequest);
+        try(InputStream inputStream = img.getInputStream()){
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(img.getSize());
+            metadata.setContentType(img.getContentType());
+            PutObjectRequest objectRequest = new PutObjectRequest(bucket, fileKey, inputStream, metadata);
+            s3Client.putObject(objectRequest);
+        }
 
         return s3Client.getUrl(bucket, fileKey).toString();
     }
@@ -44,6 +43,8 @@ public class S3Service {
     private String getFileKey(MultipartFile img, String email) {
         String folderName = email.substring(0, email.indexOf("."));
 
-        return DIR_PATH + "/" + folderName + "/" + img.getOriginalFilename();
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + img.getOriginalFilename();
+
+        return DIR_PATH + "/" + folderName + "/" + uniqueFileName;
     }
 }
