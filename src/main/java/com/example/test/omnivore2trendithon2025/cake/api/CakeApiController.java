@@ -39,7 +39,7 @@ public class CakeApiController implements CakeDocs{
                 response);
     }
 
-    @GetMapping("/{cakeId}")
+    @GetMapping("/cake/{cakeId}")
     public RspTemplate<OtherCakeResponse> findByCakeId(
             @CurrentUserEmail String email,
             @PathVariable Long cakeId) {
@@ -63,7 +63,7 @@ public class CakeApiController implements CakeDocs{
         );
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/member/{memberId}")
     public RspTemplate<MyCakeResponse> findByMemberId(@PathVariable Long memberId) {
         return new RspTemplate<>(
                 HttpStatus.OK,
