@@ -59,7 +59,7 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                                                 .from(heart)
                                                 .where(
                                                         heart.member.eq(member),
-                                                        heart.cake.member.id.eq(memberId)
+                                                        heart.cake.eq(cake)
                                                 )
                                                 .exists(),
                                         "like"
@@ -89,7 +89,7 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                                         .from(heart)
                                         .where(
                                                 heart.member.eq(member),
-                                                heart.cake.member.id.in(followerIds)
+                                                heart.cake.eq(cake)
                                         )
                                         .exists(),
                                 "like"
