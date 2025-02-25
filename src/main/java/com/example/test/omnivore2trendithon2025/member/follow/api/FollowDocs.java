@@ -8,6 +8,7 @@ import com.example.test.omnivore2trendithon2025.global.jwt.api.dto.TokenDto;
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.request.FollowReqDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoListDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoListDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -76,7 +77,7 @@ public interface FollowDocs {
                     @ApiResponse(responseCode = "401", description = "인증 실패"),
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
-    RspTemplate<FollowInfoListDto> findMyFollows(
+    RspTemplate<FollowRequestInfoListDto> findMyFollows(
             @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
             @Parameter(description = "페이지 번호", required = true) int page,
             @Parameter(description = "요청할 개수", required = true) int size);

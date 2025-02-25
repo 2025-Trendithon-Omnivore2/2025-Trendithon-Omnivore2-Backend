@@ -4,6 +4,7 @@ import com.example.test.omnivore2trendithon2025.global.annotation.CurrentUserEma
 import com.example.test.omnivore2trendithon2025.global.template.RspTemplate;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.request.FollowReqDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoListDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoListDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MyFollowsResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.application.FollowService;
@@ -60,9 +61,9 @@ public class FollowController implements FollowDocs {
     }
 
     @GetMapping("/requests")
-    public RspTemplate<FollowInfoListDto> findMyFollows(@CurrentUserEmail String email,
-                                                      @RequestParam(name = "page", defaultValue = "0") int page,
-                                                      @RequestParam(name = "size", defaultValue = "10") int size) {
+    public RspTemplate<FollowRequestInfoListDto> findMyFollows(@CurrentUserEmail String email,
+                                                               @RequestParam(name = "page", defaultValue = "0") int page,
+                                                               @RequestParam(name = "size", defaultValue = "10") int size) {
         return new RspTemplate<>(HttpStatus.OK,
                 "친구 요청 목록 조회",
                 followService.getMemberFollowRequestList(email, PageRequest.of(page, size)));

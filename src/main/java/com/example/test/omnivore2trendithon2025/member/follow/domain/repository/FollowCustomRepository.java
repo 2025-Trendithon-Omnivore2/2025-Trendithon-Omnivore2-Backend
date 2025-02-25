@@ -3,6 +3,7 @@ package com.example.test.omnivore2trendithon2025.member.follow.domain.repository
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoListDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MemberInfoForFollowResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MyFollowsResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
@@ -20,7 +21,7 @@ public interface FollowCustomRepository {
 
     Optional<Follow> findByFromMemberAndToMember(Member fromMember, Member toMember);
 
-    Page<FollowInfoResDto> findFollowerRequestList(Long memberId, Pageable pageable);
+    Page<FollowRequestInfoResDto> findFollowerRequestList(Long memberId, Pageable pageable);
 
     boolean existsAlreadyFollow(Long followId);
 

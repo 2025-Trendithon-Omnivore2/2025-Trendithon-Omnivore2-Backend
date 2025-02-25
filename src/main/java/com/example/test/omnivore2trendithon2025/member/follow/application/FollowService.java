@@ -7,6 +7,8 @@ import com.example.test.omnivore2trendithon2025.member.exception.MemberNotFoundE
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.request.FollowReqDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoListDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoListDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.FollowStatus;
@@ -89,12 +91,12 @@ public class FollowService {
         );
     }
 
-    public FollowInfoListDto getMemberFollowRequestList(String email, Pageable pageable) {
+    public FollowRequestInfoListDto getMemberFollowRequestList(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
-        Page<FollowInfoResDto> followInfoResDtos = followRepository.findFollowerRequestList(member.getId(), pageable);
+        Page<FollowRequestInfoResDto> followInfoResDtos = followRepository.findFollowerRequestList(member.getId(), pageable);
 
-        return FollowInfoListDto.of(
+        return FollowRequestInfoListDto.of(
                 followInfoResDtos.getContent(),
                 PageInfoResDto.from(followInfoResDtos)
         );

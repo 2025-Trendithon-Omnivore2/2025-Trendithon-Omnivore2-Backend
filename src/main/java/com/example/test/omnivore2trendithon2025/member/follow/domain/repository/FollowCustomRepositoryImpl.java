@@ -4,6 +4,8 @@ import static com.example.test.omnivore2trendithon2025.member.domain.QMember.mem
 import static com.example.test.omnivore2trendithon2025.member.follow.domain.QFollow.follow;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowInfoResDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoListDto;
+import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.FollowRequestInfoResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.api.dto.response.MyFollowsResDto;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.Follow;
 import com.example.test.omnivore2trendithon2025.member.follow.domain.FollowStatus;
@@ -116,11 +118,12 @@ public class FollowCustomRepositoryImpl implements FollowCustomRepository {
     }
 
     @Override
-    public Page<FollowInfoResDto> findFollowerRequestList(Long memberId, Pageable pageable) {
+    public Page<FollowRequestInfoResDto> findFollowerRequestList(Long memberId, Pageable pageable) {
 
-        List<FollowInfoResDto> fetch = queryFactory
-                .select(Projections.constructor(FollowInfoResDto.class,
+        List<FollowRequestInfoResDto> fetch = queryFactory
+                .select(Projections.constructor(FollowRequestInfoResDto.class,
                         follow.fromMember.id,
+                        follow.id,
                         follow.fromMember.name,
                         follow.fromMember.nickname,
                         follow.fromMember.picture
