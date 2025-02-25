@@ -4,9 +4,8 @@ import com.example.test.omnivore2trendithon2025.cake.api.dto.response.GuestCakeR
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.OtherCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
 import com.example.test.omnivore2trendithon2025.cake.domain.QCake;
-import com.example.test.omnivore2trendithon2025.cupcake.api.dto.response.FollowCupCakeResponse;
 import com.example.test.omnivore2trendithon2025.member.domain.Member;
-import com.querydsl.core.QueryFactory;
+import com.example.test.omnivore2trendithon2025.member.domain.QMember;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.test.omnivore2trendithon2025.cake.domain.QCake.cake;
-import static com.example.test.omnivore2trendithon2025.cupcake.domain.QCupCake.cupCake;
 import static com.example.test.omnivore2trendithon2025.heart.domain.QHeart.heart;
 import static com.example.test.omnivore2trendithon2025.member.domain.QMember.member;
 
@@ -97,6 +95,7 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                         )
                 ))
                 .from(cake)
+                .join(cake.member, QMember.member).fetchJoin()
                 .where(cake.member.id.in(followerIds))
                 .fetch();
     }
