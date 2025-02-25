@@ -95,7 +95,6 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                         )
                 ))
                 .from(cake)
-                .leftJoin(cake.member, QMember.member).fetchJoin()
                 .where(cake.member.id.in(followerIds))
                 .fetch();
     }
