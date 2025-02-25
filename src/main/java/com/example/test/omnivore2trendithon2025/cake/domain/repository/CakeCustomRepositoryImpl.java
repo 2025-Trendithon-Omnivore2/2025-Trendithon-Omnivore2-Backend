@@ -80,7 +80,7 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                         cake.id,
                         cake.member.nickname,
                         cake.color,
-                        cake.candles.size(),
+                        cake.candles,
                         cake.likeCount,
                         ExpressionUtils.as(
                                 JPAExpressions
