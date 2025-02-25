@@ -53,7 +53,7 @@ public class CakeCandleController implements CakeCandleDocs{
         );
     }
 
-    @PatchMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE})
     public RspTemplate<Void> updateCandle(@CurrentUserEmail String email,
                                           @RequestPart UpdateCandleRequest request,
