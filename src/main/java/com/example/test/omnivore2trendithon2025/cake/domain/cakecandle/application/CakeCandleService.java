@@ -66,10 +66,15 @@ public class CakeCandleService {
 
     @Transactional
     public void candleUpdate(String email, UpdateCandleRequest dto, MultipartFile img) throws IOException {
-        String imgUrl = s3Service.uploadImg(img, email);
 
-        CakeCandle cakeCandle = cakeCandleRepository.findById(dto.candleId())
+        Long cakeId = cakeRepository.findByMemberEmail(email)
+                .orElseThrow(CakeNotFoundException::new)
+                .getId();
+
+        CakeCandle cakeCandle = cakeCandleRepository.findByCakeAndIndex(cakeId, dto.candleIndex())
                 .orElseThrow(CandleNotFoundException::new);
+
+        String imgUrl = (img != null && !img.isEmpty()) ? s3Service.uploadImg(img, email) : cakeCandle.getImgUrl();
 
         cakeCandle.update(dto.content(), imgUrl);
 
