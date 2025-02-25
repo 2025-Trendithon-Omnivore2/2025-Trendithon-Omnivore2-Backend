@@ -60,12 +60,13 @@ public interface CakeDocs {
     @Operation(summary = "케이크 사용자 id 기반 조회", description = "케이크 정보를 사용자 고유 id 기반으로 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "케이크 조회 성공",
-                            content = @Content(schema = @Schema(implementation = MyCakeResponse.class))),
+                            content = @Content(schema = @Schema(implementation = OtherCakeResponse.class))),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "401", description = "인증 실패"),
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
-    RspTemplate<MyCakeResponse> findByMemberId(
+    RspTemplate<OtherCakeResponse> findByMemberId(
+            @Parameter(description = "로그인한 유저의 이메일(토큰에서 자동 추출)", hidden = true) String email,
             @Parameter(description = "사용자 고유 ID", required = true) Long memberId);
 
 
