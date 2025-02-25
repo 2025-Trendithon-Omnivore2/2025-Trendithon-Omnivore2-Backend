@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.example.test.omnivore2trendithon2025.cake.domain.CakeColor.*;
 
@@ -94,7 +95,20 @@ public class CakeService {
                 .map(FollowInfoResDto::memberId)
                 .toList();
 
-        return cakeRepository.findFollowerCakes(member, followerIds);
+        List<Cake> cakeList = cakeRepository.findFollowerCakes(followerIds);
+
+        List<Boolean> likes = heartRepository.findHeartsForCakes(cakeList, member);
+
+        return IntStream.range(0, cakeList.size())
+                .mapToObj(i -> OtherCakeResponse.of(
+                        cakeList.get(i).getId(),
+                        cakeList.get(i).getMember().getNickname(),
+                        cakeList.get(i).getColor(),
+                        cakeList.get(i).getCandles(),
+                        cakeList.get(i).getLikeCount(),
+                        likes.get(i)
+                ))
+                .collect(Collectors.toList());
     }
 
     public GuestCakeResponse findShareCake(Long memberId) {

@@ -70,12 +70,12 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
     }
 
     @Override
-    public List<OtherCakeResponse> findFollowerCakes(Member member, List<Long> followerIds) {
+    public List<Cake> findFollowerCakes(List<Long> followerIds) {
         if (followerIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return queryFactory
+        /*return queryFactory
                 .select(Projections.constructor(OtherCakeResponse.class,
                         cake.id,
                         cake.member.nickname,
@@ -96,6 +96,10 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                 ))
                 .from(cake)
                 .where(cake.member.id.in(followerIds))
+                .fetch();*/
+        return queryFactory
+                .selectFrom(cake)
+                .where(cake.member.id.in(followerIds))  // cakeId 리스트에 포함된 cake들 찾기
                 .fetch();
     }
 
