@@ -57,7 +57,7 @@ public class CakeCandleController implements CakeCandleDocs{
             MediaType.MULTIPART_FORM_DATA_VALUE})
     public RspTemplate<Void> updateCandle(@CurrentUserEmail String email,
                                           @RequestPart UpdateCandleRequest request,
-                                          @RequestPart MultipartFile image) {
+                                          @RequestPart(required = false) MultipartFile image) {
         try{
             cakeCandleService.candleUpdate(email, request, image);
 
