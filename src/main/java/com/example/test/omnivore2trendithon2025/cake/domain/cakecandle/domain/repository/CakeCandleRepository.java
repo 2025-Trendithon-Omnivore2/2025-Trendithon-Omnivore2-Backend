@@ -13,6 +13,6 @@ public interface CakeCandleRepository extends JpaRepository<CakeCandle, Long> {
     @Query("SELECT cc FROM CakeCandle cc JOIN cc.cake c WHERE c.id =:id")
     List<CakeCandle> findByCakeId(@Param("id") Long cakeId);
 
-    @Query("SELECT cc FROM CakeCandle cc JOIN cc.cake c where c.id =:id and cc.candleIndex =:candleIndex")
+    @Query("SELECT cc FROM CakeCandle cc JOIN cc.cake c where c.id =:cakeId and cc.candleIndex =:candleIndex")
     Optional<CakeCandle> findByCakeAndIndex(Long cakeId, Integer candleIndex);
 }
