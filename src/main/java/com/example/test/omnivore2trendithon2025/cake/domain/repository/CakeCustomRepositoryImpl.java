@@ -1,5 +1,6 @@
 package com.example.test.omnivore2trendithon2025.cake.domain.repository;
 
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.GuestCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.OtherCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
 import com.example.test.omnivore2trendithon2025.cake.domain.QCake;
@@ -43,13 +44,31 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
     }
 
     @Override
-    public Optional<Cake> findByMemberId(Long memberId) {
+    public Optional<OtherCakeResponse> findByMemberId(Member member, Long memberId) {
 
-        return Optional.ofNullable(queryFactory
-                .selectFrom(cake)
-                .join(cake.member, member)
-                .where(member.id.eq(memberId))
-                .fetchOne());
+        return Optional.ofNullable(
+                queryFactory
+                        .select(Projections.constructor(OtherCakeResponse.class,
+                                cake.id,
+                                cake.member.nickname,
+                                cake.color,
+                                cake.candles,
+                                cake.likeCount,
+                                ExpressionUtils.as(
+                                        JPAExpressions
+                                                .selectOne()
+                                                .from(heart)
+                                                .where(
+                                                        heart.member.eq(member),
+                                                        heart.cake.eq(cake)
+                                                )
+                                                .exists(),
+                                        "like"
+                                )
+                        ))
+                        .from(cake)
+                        .where(cake.member.id.eq(memberId))
+                        .fetchOne());
     }
 
     @Override
@@ -71,7 +90,7 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                                         .from(heart)
                                         .where(
                                                 heart.member.eq(member),
-                                                heart.cake.member.id.in(followerIds)
+                                                heart.cake.eq(cake)
                                         )
                                         .exists(),
                                 "like"
@@ -80,5 +99,22 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                 .from(cake)
                 .where(cake.member.id.in(followerIds))
                 .fetch();
+    }
+
+    @Override
+    public Optional<GuestCakeResponse> findByOnlyMemberId(Long memberId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .select(Projections.constructor(GuestCakeResponse.class,
+                                cake.id,
+                                cake.member.nickname,
+                                cake.color,
+                                cake.candles,
+                                cake.likeCount
+                        ))
+                        .from(cake)
+                        .where(cake.member.id.eq(memberId))
+                        .fetchOne()
+        );
     }
 }

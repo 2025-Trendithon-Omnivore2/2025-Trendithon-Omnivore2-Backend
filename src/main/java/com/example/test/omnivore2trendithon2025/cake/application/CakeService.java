@@ -1,6 +1,7 @@
 package com.example.test.omnivore2trendithon2025.cake.application;
 
 import com.example.test.omnivore2trendithon2025.cake.api.dto.request.SurveyRequest;
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.GuestCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.MyCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.OtherCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
@@ -75,14 +76,12 @@ public class CakeService {
                 cake.getLikeCount());
     }
 
-    public MyCakeResponse findByMemberId(Long memberId){
-        Cake cake = cakeRepository.findByMemberId(memberId)
-                .orElseThrow(CakeNotFoundException::new);
+    public OtherCakeResponse findByMemberId(String email, Long memberId){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
 
-        return MyCakeResponse.of(cake.getId(),
-                cake.getColor(),
-                cake.getCandles(),
-                cake.getLikeCount());
+        return cakeRepository.findByMemberId(member, memberId)
+                .orElseThrow(CakeNotFoundException::new);
     }
 
     public List<OtherCakeResponse> findFollowerCakes(String email, Pageable pageable) {
@@ -98,4 +97,8 @@ public class CakeService {
         return cakeRepository.findFollowerCakes(member, followerIds);
     }
 
+    public GuestCakeResponse findShareCake(Long memberId) {
+         return cakeRepository.findByOnlyMemberId(memberId)
+                .orElseThrow(CakeNotFoundException::new);
+    }
 }

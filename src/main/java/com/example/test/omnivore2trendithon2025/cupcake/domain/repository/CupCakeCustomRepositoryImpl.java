@@ -46,7 +46,7 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                                         .from(heart)
                                         .where(
                                                 heart.member.email.eq(email),
-                                                heart.cupCake.member.email.eq(email)
+                                                heart.cupCake.eq(cupCake)
                                         )
                                         .exists(),
                                 "like"
@@ -100,16 +100,17 @@ public class CupCakeCustomRepositoryImpl implements CupCakeCustomRepository {
                                         .from(heart)
                                         .where(
                                                 heart.member.id.eq(memberId),
-                                                heart.cupCake.member.id.in(followerIds)
+                                                heart.cupCake.eq(cupCake)
                                         )
                                         .exists(),
                                 "like"
                         )
                 ))
                 .from(cupCake)
-                .where(cupCake.member.id.in(followerIds)
-                        .and(cupCake.accessRange.eq(AccessRange.PUBLIC))
-                        .and(cupCake.accessRange.eq(AccessRange.FRIEND)))
+                .where(
+                        cupCake.member.id.in(followerIds)
+                                .and(cupCake.accessRange.in(AccessRange.PUBLIC, AccessRange.FRIEND))
+                )
                 .orderBy(cupCake.createdAt.desc())
                 .fetch();
     }
