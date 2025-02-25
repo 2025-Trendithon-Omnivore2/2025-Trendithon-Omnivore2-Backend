@@ -16,10 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -103,25 +99,4 @@ public class HeartCustomRepositoryImpl implements HeartCustomRepository {
                 .where(heart.member.eq(member).and(heart.cake.id.eq(cupCakeId)))
                 .fetchFirst() != null;
     }
-
-    @Override
-    public List<Boolean> findHeartsForCakes(List<Cake> cakes, Member member) {
-        if (cakes == null || cakes.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<Long> cakeIds = cakes.stream()
-                .map(Cake::getId)
-                .toList();
-
-        return cakes.stream()
-                .map(cake -> queryFactory
-                        .selectFrom(heart)
-                        .where(heart.member.eq(member)
-                                .and(heart.cake.id.eq(cake.getId())))
-                        .fetchFirst() != null)
-                .collect(Collectors.toList());
-    }
-
-
 }

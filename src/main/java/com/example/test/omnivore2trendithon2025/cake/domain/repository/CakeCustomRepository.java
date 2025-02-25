@@ -13,7 +13,7 @@ public interface CakeCustomRepository {
 
     Optional<OtherCakeResponse> findByMemberId(Member member, Long memberId);
 
-    List<Cake> findFollowerCakes(List<Long> followerIds);
+    List<OtherCakeResponse> findFollowerCakes(Member member, List<Long> followerIds);
 
     Optional<GuestCakeResponse> findByOnlyMemberId(Long memberId);
 }
