@@ -61,10 +61,10 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
         return queryFactory
                 .select(Projections.constructor(OtherCakeResponse.class,
                         cake.id,
-                        cake.color,
-                        cake.likeCount,
                         cake.member.nickname,
+                        cake.color,
                         cake.candles,
+                        cake.likeCount,
                         ExpressionUtils.as(
                                 JPAExpressions
                                         .selectOne()
