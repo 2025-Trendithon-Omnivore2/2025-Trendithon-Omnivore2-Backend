@@ -80,7 +80,7 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                         cake.id,
                         cake.member.nickname,
                         cake.color,
-                        cake.candles,
+                        cake.candles.size(),
                         cake.likeCount,
                         ExpressionUtils.as(
                                 JPAExpressions
@@ -88,14 +88,14 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
                                         .from(heart)
                                         .where(
                                                 heart.member.eq(member),
-                                                heart.cake.eq(cake)
+                                                heart.cake.id.eq(cake.id)
                                         )
                                         .exists(),
                                 "like"
                         )
                 ))
                 .from(cake)
-                .join(cake.member, QMember.member)
+                .leftJoin(cake.member, QMember.member).fetchJoin()
                 .where(cake.member.id.in(followerIds))
                 .fetch();
     }
