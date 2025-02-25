@@ -43,13 +43,31 @@ public class CakeCustomRepositoryImpl implements CakeCustomRepository {
     }
 
     @Override
-    public Optional<Cake> findByMemberId(Long memberId) {
+    public Optional<OtherCakeResponse> findByMemberId(Member member, Long memberId) {
 
-        return Optional.ofNullable(queryFactory
-                .selectFrom(cake)
-                .join(cake.member, member)
-                .where(member.id.eq(memberId))
-                .fetchOne());
+        return Optional.ofNullable(
+                queryFactory
+                        .select(Projections.constructor(OtherCakeResponse.class,
+                                cake.id,
+                                cake.member.nickname,
+                                cake.color,
+                                cake.candles,
+                                cake.likeCount,
+                                ExpressionUtils.as(
+                                        JPAExpressions
+                                                .selectOne()
+                                                .from(heart)
+                                                .where(
+                                                        heart.member.eq(member),
+                                                        heart.cake.member.id.eq(memberId)
+                                                )
+                                                .exists(),
+                                        "like"
+                                )
+                        ))
+                        .from(cake)
+                        .where(cake.member.id.eq(memberId))
+                        .fetchOne());
     }
 
     @Override

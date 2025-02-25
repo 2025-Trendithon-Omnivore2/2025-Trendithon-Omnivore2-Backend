@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CakeCustomRepository {
     Optional<Cake> findByMemberEmail(String email);
 
-    Optional<Cake> findByMemberId(Long memberId);
+    Optional<OtherCakeResponse> findByMemberId(Member member, Long memberId);
 
     List<OtherCakeResponse> findFollowerCakes(Member member, List<Long> followerIds);
 }

@@ -64,11 +64,13 @@ public class CakeApiController implements CakeDocs{
     }
 
     @GetMapping("/member/{memberId}")
-    public RspTemplate<MyCakeResponse> findByMemberId(@PathVariable Long memberId) {
+    public RspTemplate<OtherCakeResponse> findByMemberId(
+            @CurrentUserEmail String email,
+            @PathVariable Long memberId) {
         return new RspTemplate<>(
                 HttpStatus.OK,
                 "케이크 조회 완료!",
-                cakeService.findByMemberId(memberId)
+                cakeService.findByMemberId(email, memberId)
         );
     }
 
