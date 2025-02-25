@@ -1,6 +1,7 @@
 package com.example.test.omnivore2trendithon2025.cake.application;
 
 import com.example.test.omnivore2trendithon2025.cake.api.dto.request.SurveyRequest;
+import com.example.test.omnivore2trendithon2025.cake.api.dto.response.GuestCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.MyCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.api.dto.response.OtherCakeResponse;
 import com.example.test.omnivore2trendithon2025.cake.domain.Cake;
@@ -96,4 +97,8 @@ public class CakeService {
         return cakeRepository.findFollowerCakes(member, followerIds);
     }
 
+    public GuestCakeResponse findShareCake(Long memberId) {
+         return cakeRepository.findByOnlyMemberId(memberId)
+                .orElseThrow(CakeNotFoundException::new);
+    }
 }
