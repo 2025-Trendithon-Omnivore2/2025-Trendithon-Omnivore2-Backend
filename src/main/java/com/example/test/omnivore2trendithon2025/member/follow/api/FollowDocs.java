@@ -72,7 +72,7 @@ public interface FollowDocs {
     @Operation(summary = "나에게 친구 신청한 유저 목록 조회", description = "나에게 친구 신청한 유저 목록을 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "나에게 친구 신청한 유저 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = FollowInfoListDto.class))),
+                            content = @Content(schema = @Schema(implementation = FollowRequestInfoListDto.class))),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "401", description = "인증 실패"),
                     @ApiResponse(responseCode = "500", description = "서버 오류")
